@@ -1,9 +1,11 @@
 package main
 
-import "bot-for-food/cmd"
+import (
+   bot "bot-for-food/cmd"
+)
 
 func main() {
 
-   cmd.Execute()
+   bot.Execute()
 
 }
