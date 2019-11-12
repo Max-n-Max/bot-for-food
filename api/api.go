@@ -1,13 +1,13 @@
 package api
 
 import (
-	"bot-for-food/env"
+	"bot-for-food/config"
 	"bot-for-food/exchanges"
 )
 
 
 
-func InitExchange(exchangeConfig env.ExchangeConfig) exchanges.ExchangeWrapper {
+func InitExchange(exchangeConfig config.ExchangeConfig) exchanges.ExchangeWrapper {
 
 	var exch exchanges.ExchangeWrapper = exchanges.NewBitfinexWrapper(exchangeConfig)
 
