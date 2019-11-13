@@ -1,4 +1,0 @@
-exchange_configs:
-  - exchange: bitfinex
-    public_key: bitfinex_public_key
-    secret_key: bitfinex_secret_key

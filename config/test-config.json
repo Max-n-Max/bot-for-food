@@ -1,9 +1,0 @@
-{
-  "exchange_configs": [
-    {
-      "name":"bitfinex",
-      "public_key":"p_xxxx",
-      "secret_key":"s_xxxx"
-    }
-  ]
-}
