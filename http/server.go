@@ -9,8 +9,10 @@ import (
 func RunServer() {
 	router := mux.NewRouter().StrictSlash(true)
 	router.HandleFunc("/data", dataGetHandler).Methods("GET")
+	router.PathPrefix("/").Handler(http.FileServer(http.Dir("./public/client_src/"))).Methods("GET") //http://localhost:9090/app/
 	address := ":" + "9090"
 	log.Fatal(http.ListenAndServe(address, router))
+
 }
 
 func dataGetHandler(w http.ResponseWriter, r *http.Request) {

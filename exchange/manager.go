@@ -31,7 +31,7 @@ func (m *Manager) GetOrderBook() (string, error) {
 
 
 func (m *Manager) GetTrades() (string, error) {
-	//orders, err := m.client.OrderBook.Get(bitfinex.BTCUSD, 10, 10, false)
+	//orders, err := m.client_src.OrderBook.Get(bitfinex.BTCUSD, 10, 10, false)
 	//if err != nil {
 	//	return "", err
 	//}
