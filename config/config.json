@@ -1,0 +1,23 @@
+{
+  "order-book-ticker": 10000,
+  "trades-ticker": 10000,
+  "db": {
+    "hosts": "localhost:27017",
+    "database": "cryptodb",
+    "username": "",
+    "password": "",
+    "trades-collection": "trades",
+    "order-book-collection": "orderbook"
+  },
+  "exchange": {
+    "pair": "BTCUSD",
+    "bids-limit": 10,
+    "asks-limit": 10,
+    "no-group": false
+  },
+  "http": {
+    "path": "/data",
+    "port": "9090"
+  },
+  "wall-limit": 1000
+}
