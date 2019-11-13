@@ -4,3 +4,5 @@
 bot-for-food
 
 go.sum
+
+config/creds/
