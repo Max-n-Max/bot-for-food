@@ -9,8 +9,8 @@ import (
 func RunServer() {
 	router := mux.NewRouter().StrictSlash(true)
 	router.HandleFunc("/data", dataGetHandler).Methods("GET")
-
-	log.Fatal(http.ListenAndServe(":9090", router))
+	address := ":" + "9090"
+	log.Fatal(http.ListenAndServe(address, router))
 }
 
 func dataGetHandler(w http.ResponseWriter, r *http.Request) {
