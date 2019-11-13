@@ -38,13 +38,7 @@ const (
 func (m *Manager) Write(record interface{}, collection string) error{
 	col := m.session.DB(database).C(collection)
 	fmt.Println("Going to insert to BD", record)
-	//Save data into Job struct
-	//var job Job
-	//err := json.Unmarshal([]byte(record), &job)
-	//if err != nil {
-	//	fmt.Println("Error during parsing results", err)
-	//	return
-	//}
+
 
 	//Insert job into MongoDB
 	err := col.Insert(record)

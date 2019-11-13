@@ -1,2 +1,9 @@
 # bot-for-food
-# We will be rich!!!
+
+To start MongoDB run:
+Run docker-compose up
+
+
+Access MongoDB shell: 
+sudo docker ps (copy Container ID)
+sudo docker exec -it {contained ID} mongo

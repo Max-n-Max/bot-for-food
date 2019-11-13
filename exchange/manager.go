@@ -28,3 +28,17 @@ func (m *Manager) GetOrderBook() (string, error) {
 
 	return string(out), nil
 }
+
+
+func (m *Manager) GetTrades() (string, error) {
+	//orders, err := m.client.OrderBook.Get(bitfinex.BTCUSD, 10, 10, false)
+	//if err != nil {
+	//	return "", err
+	//}
+	//out, err := json.Marshal(orders)
+	//if err != nil {
+	//	return "", err
+	//}
+
+	return string(""), nil
+}
