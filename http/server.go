@@ -25,6 +25,8 @@ func NewManager(db *db.Manager, config config.Manager) *Manager{
 func (m *Manager) Run() {
 	router := mux.NewRouter().StrictSlash(true)
 	router.HandleFunc("/orderbook", m.dataGetHandler).Methods("POST")
+	router.PathPrefix("/").Handler(http.FileServer(http.Dir("./public/client_src/"))).Methods("GET") //http://localhost:9090/app/
+
 	address := ":" + "9090"
 	log.Fatal(http.ListenAndServe(address, router))
 

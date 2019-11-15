@@ -33,7 +33,7 @@ func NewManager(config config.Manager) (*Manager, error){
 
 func (m *Manager) Write(record interface{}, collection string) error{
 	col := m.session.DB(m.dbName).C(collection)
-	fmt.Println("Going to insert to BD", record)
+	//fmt.Println("Going to insert to BD", record)
 
 
 	//Insert job into MongoDB

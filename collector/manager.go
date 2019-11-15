@@ -37,7 +37,7 @@ func runTicker(fn queryType, pair string, ticker time.Ticker, channel chan strin
 		_ = <-ticker.C
 		res, e := fn(pair)
 		if e == nil {
-			fmt.Println("Got data from exchange: ", res)
+			//fmt.Println("Got data from exchange: ", res)
 			channel <- res
 		} else {
 			fmt.Println("Cannot get data from exchange. Error: ", e)
