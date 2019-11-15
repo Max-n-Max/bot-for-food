@@ -1,9 +1,12 @@
 package db
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/Max-n-Max/bot-for-food/config"
+	"github.com/Max-n-Max/bot-for-food/resources"
 	"gopkg.in/mgo.v2"
+	"gopkg.in/mgo.v2/bson"
 	"time"
 )
 
@@ -42,14 +45,19 @@ func (m *Manager) Write(record interface{}, collection string) error{
 	return err
 }
 
-func (m *Manager) GetDB() *mgo.Session{
-	return m.session
-}
 
-func (m *Manager) Query(query string) (string, error) {
+func (m *Manager) QueryOrderBook(from, to, collection string) (string, error) {
 	// TODO query DB
-	//col := m.session.DB(database).C("")
-	//"{"timestamp":{$gte: "2019-11-13", $lt: "2019-11-14"}}"
 
-	return "", nil
+	var results []resources.OrderBook
+
+	//r := record{Timestamp:timestamp{gte:"2019-11-13", lt:"2019-11-14"}}
+	col := m.session.DB(m.dbName).C(collection)
+	_ = col.Find(bson.M{"timestamp": bson.M{"$gt": from, "$lt": to}}).All(&results)
+	b, err := json.Marshal(results)
+	if err != nil {
+		fmt.Println(err)
+		return "", err
+	}
+	return string(b), nil
 }

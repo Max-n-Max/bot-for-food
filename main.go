@@ -19,9 +19,9 @@ func main() {
 		panic(err)
 	}
 	collector := collector.NewManager(*exchange)
-
+	http := http.NewManager(db, config)
 	cmd.Execute(*collector, *db, config)
-	http.RunServer()
+	http.Run()
 }
 
 //TODO Graceful shutdown
