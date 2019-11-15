@@ -21,3 +21,5 @@ db.orderbook.find({_id: {$gt: ObjectId.fromDate( new Date('2019-11-13') ) } })
 Clean collection:
 db.orderbook.remove({})
 
+demo 
+http://plnkr.co/edit/SC6sjeZYFBtco4uE4Ke3?p=preview
