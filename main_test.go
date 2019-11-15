@@ -29,3 +29,16 @@ func TestBitfinexGetTrades(t *testing.T) {
 	}
 	fmt.Println(candles)
 }
+
+
+func TestMongo(t *testing.T) {
+	//m, _ := db.NewManager()
+	////"{"timestamp":{$gte: "2019-11-13", $lt: "2019-11-14"}}"
+	//
+	//var results []resources.OrderBook
+	//
+	////r := record{Timestamp:timestamp{gte:"2019-11-13", lt:"2019-11-14"}}
+	//col := m.GetDB().DB("cryptodb").C("orderbook")
+	//_ = col.Find(bson.M{"timestamp": bson.M{"$gt": "2019-11-13", "$lt": "2019-11-14"}}).All(&results)
+	//fmt.Println(results)
+}

@@ -1,32 +1,46 @@
 package http
 
 import (
+	"fmt"
+	"github.com/Max-n-Max/bot-for-food/config"
+	"github.com/Max-n-Max/bot-for-food/db"
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"
 )
 
-func RunServer() {
+type Manager struct {
+	db *db.Manager
+	config config.Manager
+}
+
+func NewManager(db *db.Manager, config config.Manager) *Manager{
+	m := new(Manager)
+	m.db = db
+	m.config = config
+
+	return m
+}
+
+func (m *Manager) Run() {
 	router := mux.NewRouter().StrictSlash(true)
-	router.HandleFunc("/data", dataGetHandler).Methods("GET")
-	router.PathPrefix("/").Handler(http.FileServer(http.Dir("./public/client_src/"))).Methods("GET") //http://localhost:9090/app/
+	router.HandleFunc("/orderbook", m.dataGetHandler).Methods("POST")
 	address := ":" + "9090"
 	log.Fatal(http.ListenAndServe(address, router))
 
 }
 
-func dataGetHandler(w http.ResponseWriter, r *http.Request) {
+func (m *Manager) dataGetHandler(w http.ResponseWriter, r *http.Request) {
+	from := r.URL.Query().Get("from")
+	to := r.URL.Query().Get("to")
 
-	//w.Header().Set("Access-Control-Allow-Origin", "*")
-	//
-	//col := mongoStore.session.DB(database).C(collection)
-	//
-	//results := []Job{}
-	//col.Find(bson.M{"title": bson.RegEx{"", ""}}).All(&results)
-	//jsonString, err := json.Marshal(results)
-	//if err != nil {
-	//	panic(err)
-	//}
-	//fmt.Fprint(w, string(jsonString))
+	res ,err := m.db.QueryOrderBook(from, to, m.config.GetString("db.order-book-collection"))
+	if err != nil {
+		fmt.Println("ERROR")
+		//TODO return ERROR
+	}
+	w.Write([]byte(res))
+	w.Header().Set("Content-Type", "application/json")
+
 
 }

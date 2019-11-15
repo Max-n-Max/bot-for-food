@@ -3,13 +3,15 @@ package cmd
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/Max-n-Max/bot-for-food/resources"
+	"github.com/bitfinexcom/bitfinex-api-go/v1"
 	"strconv"
 	"time"
 )
 
-func ProcessOrderBook(in chan string, out chan OrderBook) {
+func ProcessOrderBook(in chan string, out chan resources.OrderBook) {
 	for j := range in {
-		var job OrderBook
+		var job resources.OrderBook
 		err := json.Unmarshal([]byte(j), &job)
 		if err != nil {
 			fmt.Println("Error during parsing results", err)
@@ -24,7 +26,7 @@ func ProcessOrderBook(in chan string, out chan OrderBook) {
 	}
 }
 
-func getWall(asks []Order) float64 {
+func getWall(asks []bitfinex.OrderBookEntry) float64 {
 	for _, o := range asks {
 		price, err := strconv.ParseFloat(o.Price, 64)
 		if err != nil {

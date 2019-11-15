@@ -8,7 +8,7 @@ import (
 
 type Manager struct{}
 
-func NewManager(configPath string,credsPath string,  configName string) Manager {
+func NewManager(configPath string, credsPath string,  configName string) Manager {
 	viper.SetConfigName(configName)
 	viper.AddConfigPath(configPath)
 	viper.AddConfigPath(credsPath)
@@ -16,7 +16,7 @@ func NewManager(configPath string,credsPath string,  configName string) Manager 
 	if err := viper.ReadInConfig(); err != nil {
 		log.Fatalf("Error reading config file, %s", err)
 	}
-	log.Info(fmt.Sprintf("Got the following config: %v", viper.AllSettings()))
+	fmt.Println(fmt.Sprintf("Got the following config: %v", viper.AllSettings()))
 	return Manager{}
 }
 
@@ -30,4 +30,8 @@ func (Manager) GetString(value string) string {
 
 func (Manager) GetBool(value string) bool {
 	return viper.GetBool(value)
+}
+
+func (Manager) GetStringSlice(value string) []string{
+	return viper.GetStringSlice(value)
 }
