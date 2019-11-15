@@ -2,26 +2,36 @@ package exchange
 
 import (
 	"encoding/json"
+	"github.com/Max-n-Max/bot-for-food/config"
+	"github.com/Max-n-Max/bot-for-food/resources"
 	"github.com/bitfinexcom/bitfinex-api-go/v1"
 )
 
 type Manager struct {
-	client* bitfinex.Client
+	client *bitfinex.Client
+	config config.Manager
 }
 
-func NewManager() *Manager {
+func NewManager(config config.Manager) *Manager {
 	m := new(Manager)
 	m.client = bitfinex.NewClient()
-	m.client.Auth("22dsdssddssd", "2dssdsdsdsdsd22")
+	m.client.Auth(config.GetString("key"), config.GetString("secret"))
+	m.config = config
 	return m
 }
 
-func (m *Manager) GetOrderBook() (string, error) {
-	orders, err := m.client.OrderBook.Get(bitfinex.BTCUSD, 10, 10, false)
+func (m *Manager) GetOrderBook(pair string) (string, error) {
+	orders, err := m.client.OrderBook.Get(
+		pair,
+		m.config.GetInt("exchange.bids-limit"),
+		m.config.GetInt("exchange.asks-limit"),
+		m.config.GetBool("exchange.no-group"))
 	if err != nil {
 		return "", err
 	}
-	out, err := json.Marshal(orders)
+
+	var job = resources.OrderBook{Bids: orders.Bids, Asks: orders.Asks, Pair: pair}
+	out, err := json.Marshal(job)
 	if err != nil {
 		return "", err
 	}
@@ -29,8 +39,7 @@ func (m *Manager) GetOrderBook() (string, error) {
 	return string(out), nil
 }
 
-
-func (m *Manager) GetTrades() (string, error) {
+func (m *Manager) GetTrades(pair string) (string, error) {
 	//orders, err := m.client.OrderBook.Get(bitfinex.BTCUSD, 10, 10, false)
 	//if err != nil {
 	//	return "", err

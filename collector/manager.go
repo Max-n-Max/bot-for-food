@@ -20,24 +20,22 @@ func NewManager(manager exchange.Manager) *Manager{
 	return c
 }
 
-type queryType func() (string, error)
+type queryType func(pair string) (string, error)
 
-func (c *Manager) RunOrderBookTicker(orderBookResCh chan string) {
-	// TODO get tickers from cong
-	ticker := time.NewTicker(10000 * time.Millisecond)
-	runTicker(c.ExchangeManager.GetOrderBook, *ticker, orderBookResCh)
+func (c *Manager) RunOrderBookTicker(pair string, interval int, orderBookResCh chan string) {
+	ticker := time.NewTicker(time.Duration(interval) * time.Second)
+	runTicker(c.ExchangeManager.GetOrderBook, pair, *ticker, orderBookResCh)
 }
 
-func (c *Manager) RunTradesTicker(tradesResCh chan string) {
-	// TODO get tickers from cong
-	ticker := time.NewTicker(10000 * time.Millisecond)
-	runTicker(c.ExchangeManager.GetTrades, *ticker, tradesResCh)
+func (c *Manager) RunTradesTicker(pair string, interval int,tradesResCh chan string) {
+	ticker := time.NewTicker(time.Duration(interval) * time.Second)
+	runTicker(c.ExchangeManager.GetTrades, pair, *ticker, tradesResCh)
 }
 
-func runTicker(fn queryType,ticker time.Ticker, channel chan string) {
+func runTicker(fn queryType, pair string, ticker time.Ticker, channel chan string) {
 	for {
 		_ = <-ticker.C
-		res, e := fn()
+		res, e := fn(pair)
 		if e == nil {
 			fmt.Println("Got data from exchange: ", res)
 			channel <- res
