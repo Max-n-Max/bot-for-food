@@ -1,0 +1,12 @@
+[
+  {
+    "type": "buy",
+    "value": 0.42,
+    "timestamp":1573635300000
+  },
+  {
+    "type": "sell",
+    "value": 0.43,
+    "timestamp":1573638600000
+  }
+]

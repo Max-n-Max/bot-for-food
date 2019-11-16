@@ -2,7 +2,8 @@
 
 
 /**
-  * Main module of the application.
+  * demo
+ http://plnkr.co/edit/SC6sjeZYFBtco4uE4Ke3
  */
 var app = angular
   .module('BotForFood', [
@@ -10,8 +11,8 @@ var app = angular
   ]);
 
 
-app.run(['$rootScope', '$timeout',  '$compile',
-  function ($rootScope, $timeout,  $compile) {
+app.run(['$rootScope',
+  function ($rootScope) {
 
 
 
