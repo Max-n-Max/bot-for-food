@@ -1,15 +1,28 @@
-
-
-
 <div layout="row">
     <div flex="50">
 
-        <div class="row" style="margin: 20px;">
-            <div id="heatmap"
-                 ng-if="vm.heatmap.length > 0"
-                 style="height: 700px; max-width: 700px; margin: 0 auto"></div>
+        <div layout="column">
+            <div layout="row">
+                <md-button md-no-ink class="md-primary"
+                           ng-click="vm.reloadHeatmap()">Reload heatmap
+                </md-button>
+
+                <md-input-container class="md-block" flex-gt-sm>
+                    <label>First name</label>
+                    <input ng-model="vm.config.colsize">
+                </md-input-container>
+            </div>
+
+
+            <div class="row" style="margin: 20px;">
+                <div id="heatmap"
+                     ng-if="vm.heatmap.length > 0"
+                     style="height: 700px; max-width: 700px; margin: 0 auto"></div>
+            </div>
         </div>
     </div>
+
+
     <div flex="50">
         <div id="stock" style="height: 500px; min-width: 310px"></div>
     </div>

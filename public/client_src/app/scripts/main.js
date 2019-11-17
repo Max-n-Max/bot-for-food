@@ -15,6 +15,11 @@ app.controller('MainCtrl',
             vm.flags_buy = [];
             vm.flags_sell = [];
 
+
+            vm.config = {
+                colsize: 6000
+            };
+
             function run() {
 
                 getCandles();
@@ -114,60 +119,39 @@ app.controller('MainCtrl',
             }
 
 
-            function randomIntFromInterval(min, max) { // min and max included
-                return Math.floor(Math.random() * (max - min + 1) + min);
+
+            function parseOrder(_els){
+
+                var sortedItem = _.sortBy(_els, function(_item){
+                    return _item.Price;
+                });
+
+                _.forEach(sortedItem,function(_val,index,arr){
+                    var item = [
+                        parseFloat(_val.Timestamp.split('.')[0])*1000,
+                        parseFloat(_val.Price),
+                        parseFloat(_val.Amount)
+                    ];
+                    vm.heatmap.push(item);
+                });
             }
 
             function getHeatMap() {
                 MainService.getHeatMap({})
-                    .then(function successCallback(response) {
+                    .then(function successCallback(data) {
 
-                        _.forEach(response,function(el,index,arr){
-                            vm.heatmap.push([
-                                Date.UTC(
-                                    parseFloat(el[0].split("-")[0]),
-                                    parseFloat(el[0].split("-")[1]),
-                                    parseFloat(el[0].split("-")[2])
-                                ),
-                                el[1],
-                                el[2]
-                            ]);
+                        //console.log(data);
+
+                        //calculate the distance TODO:
+
+                        _.forEach(data, function(el,index,arr){
+                            parseOrder(el.Asks);
+                            parseOrder(el.Bids);
                         });
-
-                        console.log(vm.heatmap);
 
                         $timeout(function () {
                             buildHeatMapChart();
                         }, 500);
-
-
-                        // _.forEach(response.data, function (el, index, arr) {
-                        //
-                        //     _.forEach(el.Bids, function (bid, index, arr) {
-                        //
-                        //         var item = [
-                        //             parseFloat(bid.Timestamp.split('.')[0]) * 1000,
-                        //             parseFloat(bid.Price),
-                        //             parseFloat(randomIntFromInterval(0, 100))//bid.Amount)
-                        //         ];
-                        //         vm.heatmap.push(item);
-                        //     });
-                        //
-                        //     _.forEach(el.Asks, function (ask, index, arr) {
-                        //
-                        //
-                        //         var item = [
-                        //             parseFloat(ask.Timestamp.split('.')[0]) * 1000,
-                        //             parseFloat(ask.Price),
-                        //             parseFloat(randomIntFromInterval(0, 100))//parseFloat(ask.Amount)
-                        //         ];
-                        //         vm.heatmap.push(item);
-                        //     });
-                        //
-                        // });
-                        //
-                        // console.log(vm.heatmap);
-                        // buildHeatMapChart();
 
                     }, function errorCallback(response) {
                         console.error(response);
@@ -176,57 +160,58 @@ app.controller('MainCtrl',
 
             function buildHeatMapChart(){
 
-                Highcharts.chart('heatmap', {
+                vm.heatMapOptions = {
                     chart: {
                         type: 'heatmap',
-                        margin: [60, 10, 80, 50]
+                        zoomType : 'xy'
+                        //margin: [60, 10, 80, 50]
                     },
                     boost: {
-                        useGPUTranslations: true
+                        useGPUTranslations: true,
+                        usePreallocated: true
                     },
                     xAxis: {
                         type: 'datetime',
                         // min: Date.UTC(2017, 0, 1),
                         // max: Date.UTC(2017, 11, 31, 23, 59, 59),
-                        labels: {
-                            align: 'left',
-                            x: 5,
-                            y: 14,
-                            format: '{value:%B}' // long month
-                        },
-                        showLastLabel: false,
-                        tickLength: 16
+                        // labels: {
+                        //     align: 'left',
+                        //     x: 5,
+                        //     y: 14,
+                        //     format: '{value:%B}' // long month
+                        // },
+                        // showLastLabel: false,
+                        // tickLength: 16
                     },
 
-                    yAxis: {
-                        title: {
-                            text: null
-                        },
-                        labels: {
-                            format: '{value}:00'
-                        },
-                        minPadding: 0,
-                        maxPadding: 0,
-                        startOnTick: false,
-                        endOnTick: false,
-                        tickPositions: [0, 6, 12, 18, 24],
-                        tickWidth: 1,
-                        min: 0,
-                        max: 23,
-                        reversed: true
-                    },
+                    // yAxis: {
+                    //     title: {
+                    //         text: null
+                    //     },
+                    //     labels: {
+                    //         format: '{value}:00'
+                    //     },
+                    //     minPadding: 0,
+                    //     maxPadding: 0,
+                    //     startOnTick: false,
+                    //     endOnTick: false,
+                    //     tickPositions: [0, 6, 12, 18, 24],
+                    //     tickWidth: 1,
+                    //     min: 0,
+                    //     max: 23,
+                    //     reversed: true
+                    // },
 
                     colorAxis: {
                         stops: [
                             [0, '#3060cf'],
                             [0.5, '#fffbbc'],
-                            [0.9, '#c4463a'],
                             [1, '#c4463a']
                         ],
-                        min: -15,
-                        max: 25,
-                        startOnTick: false,
-                        endOnTick: false,
+                        // min: -15,
+                        // max: 25,
+                        // startOnTick: false,
+                        // endOnTick: false,
                         labels: {
                             format: '{value}℃'
                         }
@@ -236,16 +221,18 @@ app.controller('MainCtrl',
                             data: vm.heatmap,
                             boostThreshold: 100,
                             borderWidth: 0,
-                            nullColor: 'red',
-                            colsize: 24 * 36e5, // one day
-                            tooltip: {
-                                headerFormat: 'Temperature<br/>',
-                                pointFormat: '{point.x:%e %b, %Y} {point.y}:00: <b>{point.value} ℃</b>'
-                            },
+                            nullColor: 'black',
+                            colsize: vm.config.colsize,
+                            // tooltip: {
+                            //     headerFormat: 'Temperature<br/>',
+                            //     pointFormat: '{point.x:%e %b, %Y} {point.y}:00: <b>{point.value} ℃</b>'
+                            // },
                             turboThreshold: Number.MAX_VALUE
                         }
                     ]
-                });
+                }
+
+                vm.heatmapChart = Highcharts.chart('heatmap', vm.heatMapOptions);
             };
 
             function buildHeatMapChart_new() {
@@ -427,6 +414,28 @@ app.controller('MainCtrl',
 
                     ]
                 });
+            }
+
+
+            // $scope.$watch(function(){
+            //     return vm.config.colsize;
+            // } , function (newVal, oldVal) {
+            //     if (newVal != oldVal) {
+            //         vm.heatmapChart.redraw();
+            //         vm.heatmapChart.reflow();
+            //     }
+            // });
+
+            vm.reloadHeatmap = function (){
+
+                //vm.heatmapChart.series[0].userOptions.colsize = vm.config.colsize;
+
+                vm.heatMapOptions.series[0].colsize = vm.config.colsize;
+
+                vm.heatmapChart = Highcharts.chart('heatmap', vm.heatMapOptions);
+                //
+                // vm.heatmapChart.redraw();
+                // vm.heatmapChart.reflow();
             }
 
 
