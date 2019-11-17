@@ -1,0 +1,62 @@
+<md-content layout-fill style="overflow: hidden;">
+
+    <md-toolbar>
+        <span flex></span>
+        <h2 class="md-toolbar-tools">
+            <span class="md-flex">Bot For Food</span>
+        </h2>
+    </md-toolbar>
+
+    <md-content flex layout-fill>
+        <div layout="row" layout-fill>
+            <md-sidenav ng-cloak layout="column"
+                        style="
+                           background-color: #bfc4e2;
+                           width: 80px;
+                           min-width: 80px;
+                           max-width: 80px;
+                           overflow-x: hidden;"
+
+                        class="md-sidenav-left md-whiteframe-z2" md-component-id="lefta"
+                        md-is-locked-open="$mdMedia('gt-md')" flex>
+
+
+                <div ng-repeat="item in vm.menus track by $index"
+                     style="max-height: 85px;min-height: 85px; height: 85px;">
+
+                    <a class="md-button md-ink-ripple"
+                       style="margin: 0;padding: 0;"
+                       ng-click="goToView(item)"
+                       aria-label="Getting Started">
+
+                            <span class="ng-binding ng-scope">
+                               <div class="inset"
+                                    style="
+                            margin: 0 auto;
+                            padding: 0;
+                            height: 25px;">
+                            <ng-md-icon style="height: 64px; width: 64px;"
+                                        size="64"
+                                        icon="{{item.icon}}"
+                                        ng-style="{'fill':item.fill}"></ng-md-icon>
+
+                        </div>
+                       <div class="inset"
+                            style="cursor:pointer;padding: 14px 0px 0px 0px;font-size: 12px;text-transform: none;margin: 0 auto;"
+                       >
+
+                         <p>{{item.title}}</p>
+                        </div>
+                                 </span>
+                    </a>
+
+                </div>
+            </md-sidenav>
+
+
+            <div flex ui-view="content" class="ui-view-sideMenusMargins"
+                 style="background-color: white;overflow-y: auto;"></div>
+        </div>
+    </md-content>
+
+</md-content>

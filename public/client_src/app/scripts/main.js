@@ -24,10 +24,6 @@ app.controller('MainCtrl',
                 getOrderbook();
 
                 getHeatMap();
-
-
-
-
             }
 
             function getOrderbook(){

@@ -7,13 +7,16 @@
  */
 var app = angular
   .module('BotForFood', [
-    'ngMaterial'
-  ]);
+    'ngMaterial',
+    'ngRoute',
+    'ui.router',
+    'ngMdIcons'
+  ],);
 
 
 app.run(['$rootScope',
   function ($rootScope) {
 
-
+  console.log("The app is called");
 
   }]); // end run()
