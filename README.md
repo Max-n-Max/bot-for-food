@@ -24,5 +24,5 @@ db.orderbook.remove({})
 
 ### run Client:
 
-1) Enter to `d/public/client_src` and run `npm install`
+1) Enter to `/public/client_src` and run `npm install`
 2) open Cherome and run `http://localhost:9090/app/#!/sidemenu/main`
