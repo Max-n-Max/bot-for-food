@@ -1,6 +1,7 @@
 package http
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/Max-n-Max/bot-for-food/config"
 	"github.com/Max-n-Max/bot-for-food/db"
@@ -10,11 +11,11 @@ import (
 )
 
 type Manager struct {
-	db *db.Manager
+	db     *db.Manager
 	config config.Manager
 }
 
-func NewManager(db *db.Manager, config config.Manager) *Manager{
+func NewManager(db *db.Manager, config config.Manager) *Manager {
 	m := new(Manager)
 	m.db = db
 	m.config = config
@@ -32,17 +33,26 @@ func (m *Manager) Run() {
 
 }
 
-func (m *Manager) dataGetHandler(w http.ResponseWriter, r *http.Request) {
-	from := r.URL.Query().Get("from")
-	to := r.URL.Query().Get("to")
+type OrderBookReqBody struct {
+	From string `json:"from"`
+	To   string `json:"to"`
+	Pair string `json:"pair"`
+}
 
-	res ,err := m.db.QueryOrderBook(from, to, m.config.GetString("db.order-book-collection"))
+func (m *Manager) dataGetHandler(w http.ResponseWriter, r *http.Request) {
+	decoder := json.NewDecoder(r.Body)
+	var rBody OrderBookReqBody
+	err := decoder.Decode(&rBody)
+	if err != nil {
+		panic(err)
+	}
+
+	res, err := m.db.QueryOrderBook(rBody.From, rBody.To, rBody.Pair, m.config.GetString("db.order-book-collection"))
 	if err != nil {
 		fmt.Println("ERROR")
 		//TODO return ERROR
 	}
 	w.Write([]byte(res))
 	w.Header().Set("Content-Type", "application/json")
-
 
 }
