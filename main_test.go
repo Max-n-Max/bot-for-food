@@ -39,10 +39,6 @@ func TestListenOnChage(t *testing.T){
 	}
 }
 
-func TestCandlesHistoryWithQuery(t *testing.T){
-
-}
-
 
 func TestCandlesHistory(t *testing.T){
 
@@ -97,28 +93,6 @@ func TestCandlesHistory(t *testing.T){
 	log.Printf("length of candles is: %v", len(candlesMore.Snapshot))
 	log.Printf("first candle is: %#v\n", candlesMore.Snapshot[0])
 	log.Printf("last candle is: %#v\n", candlesMore.Snapshot[len(candlesMore.Snapshot)-1])
-
-
-	//	//client := rest.NewClient()
-//	client := bitfinex.NewClient()
-//	candles, err := client.Candles.History(bfx.TradingPrefix+bfx.BTCUSD, bfx.FiveMinutes)
-//	if err != nil {
-//		log.Fatalf("Failed getting candles: %s", err)
-//	}
-//	log.Printf("length of candles is: %v", len(candles.Snapshot))
-//	log.Printf("first candle is: %#v\n", candles.Snapshot[0])
-//	log.Printf("last candle is: %#v\n", candles.Snapshot[len(candles.Snapshot)-1])
-//}
-//
-//func TestBitfinexGetOrderBook(t *testing.T) {
-//	b := v1.NewClient()
-//	b = b.Auth("22dsdssddssd","2dssdsdsdsdsd22")
-//
-//	orders, err := b.OrderBook.Get(bitfinex.BTCUSD, 10, 10, false)
-//	if err != nil {
-//		fmt.Println("Error", err)
-//	}
-//	fmt.Println(orders)
 }
 
 func TestBitfinexGetTrades(t *testing.T) {
