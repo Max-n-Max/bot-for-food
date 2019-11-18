@@ -46,14 +46,12 @@ func (m *Manager) Write(record interface{}, collection string) error{
 }
 
 
-func (m *Manager) QueryOrderBook(from, to, collection string) (string, error) {
-	// TODO query DB
-
+func (m *Manager) QueryOrderBook(from, to, pair, collection string) (string, error) {
 	var results []resources.OrderBook
 
 	//r := record{Timestamp:timestamp{gte:"2019-11-13", lt:"2019-11-14"}}
 	col := m.session.DB(m.dbName).C(collection)
-	_ = col.Find(bson.M{"timestamp": bson.M{"$gt": from, "$lt": to}}).All(&results)
+	_ = col.Find(bson.M{"timestamp": bson.M{"$gt": from, "$lt": to}, "pair":pair}).All(&results)
 	b, err := json.Marshal(results)
 	if err != nil {
 		fmt.Println(err)
