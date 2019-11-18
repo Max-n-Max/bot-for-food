@@ -205,15 +205,15 @@ app.controller('MainCtrl',
                     colorAxis: {
                         stops: [
                             [0, '#3060cf'],
-                            [0.5, '#fffbbc'],
-                            [1, '#c4463a']
+                            [0.2, '#fffbbc'],
+                            [0.6, '#c4463a']
                         ],
                         // min: -15,
                         // max: 25,
                         // startOnTick: false,
                         // endOnTick: false,
                         labels: {
-                            format: '{value}℃'
+                            format: '{value}'
                         }
                     },
                     series: [
@@ -235,81 +235,6 @@ app.controller('MainCtrl',
                 vm.heatmapChart = Highcharts.chart('heatmap', vm.heatMapOptions);
             };
 
-            function buildHeatMapChart_new() {
-
-                Highcharts.chart('container2', {
-                    chart: {
-                        type: 'heatmap',
-                        margin: [60, 10, 80, 50]
-                    },
-                    boost: {
-                        useGPUTranslations: true
-                    },
-                    xAxis: {
-                        type: 'datetime',
-                        min: Date.UTC(2019, 10, 15, 19, 10, 0),
-                        max: Date.UTC(2019, 10, 15, 19, 20, 59),
-                        labels: {
-                            align: 'left',
-                            x: 5,
-                            y: 14,
-                            //format: '{value:%B}' // long month
-                        },
-                        showLastLabel: false,
-                        tickLength: 16
-                    },
-
-                    yAxis: {
-                        title: {
-                            text: null
-                        },
-                        labels: {
-                            format: '{value}'
-                        },
-                        minPadding: 0,
-                        maxPadding: 0,
-                        startOnTick: false,
-                        endOnTick: false,
-                        tickPositions: [8450, 8455, 8460, 8465, 8470, 8475, 8480, 8485, 8490, 8495, 8500],
-                        tickWidth: 1,
-                        min: 8470,
-                        max: 8490,
-                        reversed: false
-                    },
-
-                    colorAxis: {
-                        stops: [
-                            [0, '#3060cf'],
-                            [0.5, '#fffbbc'],
-                            [0.9, '#c4463a'],
-                            [1, '#c4463a']
-                        ],
-                        min: 0,
-                        max: 100,
-                        startOnTick: false,
-                        endOnTick: false,
-                        labels: {
-                            format: '{value}'
-                        }
-                    },
-
-                    series: [
-                        {
-                            data: vm.heatmap,
-                            boostThreshold: 100,
-                            borderWidth: 1,
-                            borderColor: "#ffffff",
-                            nullColor: 'black',
-                            colsize: 6000,//24 * 60 * 60 * 1000, // one day
-                            tooltip: {
-                                headerFormat: 'Order<br/>',
-                                pointFormat: '{point.x:%e %b, %Y} <b>{point.y}:$</b>: order:{point.value} '
-                            },
-                            turboThreshold: Number.MAX_VALUE
-                        }
-                    ]
-                });
-            };
 
             function buildCandlesChart() {
 

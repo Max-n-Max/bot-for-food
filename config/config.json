@@ -1,6 +1,6 @@
 {
-  "order-book-ticker": 10,
-  "trades-ticker": 10,
+  "order-book-ticker": 30,
+  "trades-ticker": 30,
   "db": {
     "hosts": "localhost:27017",
     "timeout": 60,
@@ -14,8 +14,8 @@
     "pairs": [
       "BTCUSD"
     ],
-    "bids-limit": 10,
-    "asks-limit": 10,
+    "bids-limit": 100,
+    "asks-limit": 100,
     "no-group": false
   },
   "http": {

@@ -8,7 +8,7 @@ app.service('MainService',
 
             self.getOrderbook = function (_data) {
 
-                var path = "?from=2019-11-15&to=2019-11-16"; // dummy usage
+                var path = "?from=2019-11-17&to=2019-11-18"; // dummy usage
 
                 /*var data = {
                     from: "2019-11-15",
