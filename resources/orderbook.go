@@ -11,3 +11,10 @@ type OrderBook struct {
 	Bids      []bitfinex.OrderBookEntry
 	Asks      []bitfinex.OrderBookEntry
 }
+
+
+type OrderBookReqBody struct {
+	From string `json:"from"`
+	To   string `json:"to"`
+	Pair string `json:"pair"`
+}

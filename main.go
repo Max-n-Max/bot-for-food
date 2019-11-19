@@ -19,7 +19,7 @@ func main() {
 		panic(err)
 	}
 	collector := collector.NewManager(*exchange)
-	http := http.NewManager(db, config)
+	http := http.NewManager(db, *exchange, config)
 	cmd.Execute(*collector, *db, config)
 	http.Run()
 }

@@ -5,19 +5,23 @@ import (
 	"fmt"
 	"github.com/Max-n-Max/bot-for-food/config"
 	"github.com/Max-n-Max/bot-for-food/db"
+	"github.com/Max-n-Max/bot-for-food/exchange"
+	"github.com/Max-n-Max/bot-for-food/resources"
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"
 )
 
 type Manager struct {
-	db     *db.Manager
-	config config.Manager
+	db       *db.Manager
+	exchange exchange.Manager
+	config   config.Manager
 }
 
-func NewManager(db *db.Manager, config config.Manager) *Manager {
+func NewManager(db *db.Manager, exchange exchange.Manager, config config.Manager) *Manager {
 	m := new(Manager)
 	m.db = db
+	m.exchange = exchange
 	m.config = config
 
 	return m
@@ -25,7 +29,8 @@ func NewManager(db *db.Manager, config config.Manager) *Manager {
 
 func (m *Manager) Run() {
 	router := mux.NewRouter().StrictSlash(true)
-	router.HandleFunc("/orderbook", m.dataGetHandler).Methods("POST")
+	router.HandleFunc("/orderbook", m.orderBookHandler).Methods("POST")
+	router.HandleFunc("/candles/history", m.candlesHistoryHandler).Methods("POST")
 	router.PathPrefix("/").Handler(http.FileServer(http.Dir("./public/client_src/"))).Methods("GET") //http://localhost:9090/app/
 
 	address := ":" + "9090"
@@ -33,15 +38,9 @@ func (m *Manager) Run() {
 
 }
 
-type OrderBookReqBody struct {
-	From string `json:"from"`
-	To   string `json:"to"`
-	Pair string `json:"pair"`
-}
-
-func (m *Manager) dataGetHandler(w http.ResponseWriter, r *http.Request) {
+func (m *Manager) orderBookHandler(w http.ResponseWriter, r *http.Request) {
 	decoder := json.NewDecoder(r.Body)
-	var rBody OrderBookReqBody
+	var rBody resources.OrderBookReqBody
 	err := decoder.Decode(&rBody)
 	if err != nil {
 		panic(err)
@@ -54,5 +53,31 @@ func (m *Manager) dataGetHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Write([]byte(res))
 	w.Header().Set("Content-Type", "application/json")
+}
+
+func (m *Manager) candlesHistoryHandler(w http.ResponseWriter, r *http.Request) {
+	decoder := json.NewDecoder(r.Body)
+	var rBody resources.CandlesHistoryBody
+	err := decoder.Decode(&rBody)
+	if err != nil {
+		panic(err)
+	}
+
+	res, err := m.exchange.GetCandlesHistory(rBody)
+
+	if err != nil {
+		fmt.Println("ERROR")
+		//TODO return ERROR
+		http.Error(w, "Error!!!", http.StatusBadRequest)
+	}
+	resJson, err := json.Marshal(res)
+	if err != nil {
+		fmt.Println("ERROR")
+		//TODO return ERROR
+		http.Error(w, "Error!!!", http.StatusBadRequest)
+	} else {
+		w.Write([]byte(resJson))
+		w.Header().Set("Content-Type", "application/json")
+	}
 
 }
