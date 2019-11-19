@@ -1,15 +1,14 @@
-package cmd
+package collector
 
 import (
 	"fmt"
-	"github.com/Max-n-Max/bot-for-food/collector"
 	"github.com/Max-n-Max/bot-for-food/config"
 	"github.com/Max-n-Max/bot-for-food/db"
 	"github.com/Max-n-Max/bot-for-food/resources"
 )
 
 
-func Execute(collector collector.Manager, db db.Manager, config config.Manager) {
+func Execute(collector Manager, db db.Manager, config config.Manager) {
 
 	orderBookExchangeCh := make(chan string)
 	//tradesExchangeCh := make(chan string)

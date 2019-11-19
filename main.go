@@ -1,7 +1,6 @@
 package main
 
 import (
-	"github.com/Max-n-Max/bot-for-food/cmd"
 	"github.com/Max-n-Max/bot-for-food/collector"
 	"github.com/Max-n-Max/bot-for-food/config"
 	"github.com/Max-n-Max/bot-for-food/db"
@@ -18,9 +17,11 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	collector := collector.NewManager(*exchange)
-	http := http.NewManager(db, config)
-	cmd.Execute(*collector, *db, config)
+	collect := collector.NewManager(*exchange)
+	handler := http.NewHandler(db, *exchange, config)
+	http := http.NewManager(*handler, config)
+
+	collector.Execute(*collect, *db, config)
 	http.Run()
 }
 
