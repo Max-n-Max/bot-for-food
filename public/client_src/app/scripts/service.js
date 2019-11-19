@@ -8,15 +8,13 @@ app.service('MainService',
 
             self.getOrderbook = function (_data) {
 
-                var path = "?from=2019-11-17&to=2019-11-18"; // dummy usage
-
-                /*var data = {
-                    from: "2019-11-15",
-                    to: "2019-11-16",
+                var data = {
+                    date_start: "2019-11-17",
+                    date_end: "2019-11-19",
                     pair: "BTCUSD"
-                };*/
+                }
 
-                return apiClient.getOrderbook(path, _data)
+                return apiClient.getOrderbook(data)
                     .then(function (data) {
                         return data;
                     },

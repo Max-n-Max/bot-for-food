@@ -26,24 +26,24 @@ app.controller('MainCtrl',
 
                 getOrderFlags();
 
-                getOrderbook();
+                // getOrderbook();
 
                 getHeatMap();
             }
 
-            function getOrderbook(){
-                var data = {};
-                MainService.getOrderbook(data).then(function (_data) {
-                    vm.data = _data;
-                }, function (error) {
-                    console.error(error);
-
-                    $mdToast.show($mdToast.simple().content('Reason: ' + error.status)
-                        .position('top right').hideDelay(5000))
-                        .then(function () {
-                        });
-                });
-            }
+            // function getOrderbook(){
+            //     var data = {};
+            //     MainService.getOrderbook(data).then(function (_data) {
+            //         vm.data = _data;
+            //     }, function (error) {
+            //         console.error(error);
+            //
+            //         $mdToast.show($mdToast.simple().content('Reason: ' + error.status)
+            //             .position('top right').hideDelay(5000))
+            //             .then(function () {
+            //             });
+            //     });
+            // }
 
 
             function getCandles() {
@@ -118,9 +118,23 @@ app.controller('MainCtrl',
                     });
             }
 
-
+            var step = -1;
 
             function parseOrder(_els){
+
+            if(step == -1){
+                step = parseFloat(_els[0].Timestamp.split('.')[0])*1000;
+            }
+            else{
+                var diff = (parseFloat(_els[0].Timestamp.split('.')[0])*1000 - step);
+                if(diff > 0){
+                    console.log("diff: " + diff);
+                    if(vm.config.colsize >= diff){
+                        vm.config.colsize = diff * 1000
+                    }
+                }
+                step = parseFloat(_els[0].Timestamp.split('.')[0])*1000;
+            }
 
                 var sortedItem = _.sortBy(_els, function(_item){
                     return _item.Price;
@@ -253,7 +267,7 @@ app.controller('MainCtrl',
                     rangeSelector: {
                         selected: 1
                     },
-
+                    chart: {backgroundColor: "rgba(0,0,0,0)"},
                     title: {
                         text: ''
                     },

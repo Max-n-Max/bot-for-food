@@ -3,25 +3,21 @@
 app.service('apiClient', ['$http', '$q',
     function ($http, $q) {
 
-        var request = function (apiMethod, path, data) {
+        let request = function (apiMethod, data) {
 
             if(!data){
                 data = {};
             }
 
-            if(!path){
-                path = '';
-            }
+            let deferred = $q.defer();
 
-            var deferred = $q.defer();
+            let apiPath = getApiPath();
 
-            var apiPath = getApiPath();
+            console.log("API call: " + apiMethod);
 
-
-
-            var config = {
+            let config = {
                 method: 'POST',
-                url: apiPath + apiMethod + path,
+                url: apiPath + apiMethod,
                 data: data,
                 headers: {
                     'Content-Type': 'application/json;charset=UTF-8'
@@ -45,7 +41,7 @@ app.service('apiClient', ['$http', '$q',
         };
 
         return {
-            getOrderbook: function (path, data) {return request('orderbook',path, data);},
+            getOrderbook: function (data) {return request('get_order_book',data);},
 
         };
     }]);
