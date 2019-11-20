@@ -14,7 +14,7 @@ type OrderBook struct {
 
 
 type OrderBookReqBody struct {
-	From string `json:"from"`
-	To   string `json:"to"`
+	From string `json:"date_start"`
+	To   string `json:"date_end"`
 	Pair string `json:"pair"`
 }

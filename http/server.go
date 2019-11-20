@@ -22,17 +22,14 @@ func NewManager(handler Handler, config config.Manager) *Manager {
 
 func (m *Manager) Run() {
 	router := mux.NewRouter().StrictSlash(true)
-	router.HandleFunc("/get_order_book", m.dataGetHandler).Methods("POST")
-	router.HandleFunc("/candles/history", m.handler.CandlesHistoryHandler).Methods("POST")
-	router.PathPrefix("/").Handler(http.FileServer(http.Dir("./public/client_src/"))).Methods("GET") //http://localhost:9090/app/
+	router.HandleFunc("/get_order_book",      m.handler.OrderBookHandler     ).Methods("POST")
+	router.HandleFunc("/get_candles_history", m.handler.CandlesHistoryHandler).Methods("POST")
+
+	// for static
+	// http://localhost:9090/app/
+	router.PathPrefix("/").Handler(http.FileServer(http.Dir("./public/client_src/"))).Methods("GET")
 
 	address := ":" + "9090"
 	log.Fatal(http.ListenAndServe(address, router))
-}
-
-type OrderBookReqBody struct {
-	From string `json:"date_start"`
-	To   string `json:"date_end"`
-	Pair string `json:"pair"`
 }
 
