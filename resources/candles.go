@@ -6,5 +6,5 @@ type CandlesHistoryBody struct {
 	Start       int64  `json:"start"`
 	End         int64  `json:"end"`
 	Limit       int    `json:"limit"`
-	OldestFirst bool   `json:"OldestFirst"`
+	OldestFirst bool   `json:"oldest_first"`
 }

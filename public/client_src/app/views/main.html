@@ -1,16 +1,58 @@
 <div layout="row">
     <div flex="50">
 
-        <div layout="column">
-            <div layout="row">
-                <md-button md-no-ink class="md-primary"
-                           ng-click="vm.reloadHeatmap()">Reload heatmap
-                </md-button>
+        <div layout="row">
+            <div layout="column">
 
-                <md-input-container class="md-block" flex-gt-sm>
-                    <label>First name</label>
-                    <input ng-model="vm.config.colsize">
+                <div layout="column" flex-order="1" flex-order-gt-sm="0">
+                    <md-subheader>Start Date</md-subheader>
+                    <md-calendar ng-model="vm.startDate"></md-calendar>
+                </div>
+
+                <div layout="column" flex-order="1" flex-order-gt-sm="1">
+                    <md-subheader>End Date</md-subheader>
+                    <md-calendar ng-model="vm.endDate"></md-calendar>
+                </div>
+
+
+
+<!--                <md-input-container class="md-block" flex-gt-sm>-->
+<!--                    <label>First name</label>-->
+<!--                    <input ng-model="vm.config.colsize">-->
+<!--                </md-input-container>-->
+            </div>
+
+            <div layout="column" flex-order="0" flex-order-gt-sm="2">
+                <md-select ng-model="vm.candleResolutionValue"
+                           ng-change="vm.onCandleResolutionChange(vm.candleResolutionValue)"
+                           aria-label="selected candleResolution">
+                    <md-option
+                            style="border-bottom: none;padding-left: 6px;"
+                            ng-value="cr.value"
+                            ng-repeat="cr in vm.candleResolutionOptions track by cr.value"
+                            ng-bind="cr.name">
+                    </md-option>
+                </md-select>
+
+                <md-select ng-model="vm.pairValue"
+                           ng-change="vm.onPairChange(vm.pairValue)"
+                           aria-label="selected candleResolution">
+                    <md-option
+                            style="border-bottom: none;padding-left: 6px;"
+                            ng-value="p.value"
+                            ng-repeat="p in vm.pairOptions track by p.value"
+                            ng-bind="p.name">
+                    </md-option>
+                </md-select>
+
+                <md-input-container class="md-block">
+                    <label>limit</label>
+                    <input ng-model="vm.candlesLimit">
                 </md-input-container>
+
+                <md-button class="md-raised md-primary"
+                           ng-click="vm.reloadCandles()">Reload Candles
+                </md-button>
             </div>
 
 

@@ -15,10 +15,64 @@ app.controller('MainCtrl',
             vm.flags_buy = [];
             vm.flags_sell = [];
 
+            vm.startDate = new Date();
+            vm.endDate = new Date();
+            vm.startDate.setDate(this.endDate.getDate() - 5);
+
+            vm.candlesLimit = 200;
+
+            vm.candleResolutionOptions = [
+                {value:"1m", name: "1 min"},
+                {value:"5m", name: "5 mins"},
+                {value:"15m", name: "15 mins"},
+                {value:"30m", name: "30 mins"},
+                {value:"1h", name: "1 hour"},
+                {value:"3h", name: "3 hours"},
+                {value:"6h", name: "6 hours"},
+                {value:"12h", name: "12 hours"},
+                {value:"1D", name: "1 day"},
+                {value:"7D", name: "1 week"},
+                {value:"14D", name: "2 weeks"},
+                {value:"1M", name: "1 month"},
+            ];
+
+
+            vm.candleResolutionValue = angular.copy(vm.candleResolutionOptions[1].value);
+
+
+            vm.pairOptions = [
+                {value:"BTCUSD",name:"BTC/USD"},
+                {value:"LTCUSD",name:"LTC/USD"},
+                {value:"ETHUSD",name:"ETH/USD"},
+                {value:"ETCUSD",name:"ETC/USD"},
+                {value:"ZECUSD",name:"ZEC/USD"},
+                {value:"XMRUSD",name:"XMR/USD"},
+                {value:"XRPUSD",name:"XRP/USD"},
+                {value:"EOSUSD",name:"EOS/USD"},
+                {value:"NEOUSD",name:"NEO/USD"},
+                {value:"TRXUSD",name:"TRX/USD"},
+                {value:"IOTUSD",name:"IOT/USD"},
+                {value:"ETPUSD",name:"ETP/USD"}
+            ];
+
+
+            vm.pairValue = angular.copy(vm.pairOptions[0].value);
+
+            vm.reloadCandles = function(){
+                getCandles();
+            };
 
             vm.config = {
                 colsize: 6000
             };
+
+            vm.onCandleResolutionChange = function(_value){
+                getCandles();
+            }
+
+            vm.onPairChange = function(_value){
+                getCandles();
+            }
 
             function run() {
 
@@ -28,7 +82,7 @@ app.controller('MainCtrl',
 
                 // getOrderbook();
 
-                getHeatMap();
+                // getHeatMap();
             }
 
             // function getOrderbook(){
@@ -48,7 +102,26 @@ app.controller('MainCtrl',
 
             function getCandles() {
 
-                var data = {};
+                /*  Pair        string `json:"pair"`
+                    Resolution  string `json:"resolution"`
+                    Start       int64  `json:"start"`
+                    End         int64  `json:"end"`
+                    Limit       int    `json:"limit"`
+                    OldestFirst bool   `json:"oldest_first"`
+                    */
+
+
+
+                var data = {
+                    pair: vm.pairValue,
+                    resolution: vm.candleResolutionValue,
+                    start: 1574199919404,//new Date().getTime() - 200 * 3600,
+                    end:   1574286319404,//new Date().getTime(),
+                    limit: parseInt(vm.candlesLimit),
+                    oldest_first: false
+
+
+                };
                 MainService.getCandles(data).then(function successCallback(response) {
 
                         var temp = [];
@@ -56,15 +129,15 @@ app.controller('MainCtrl',
                         _.forEach(response, function (el, index, arr) {
                             temp.push(
                                 [
-                                    el[0], // time
-                                    el[1], // open
-                                    el[3], // high
-                                    el[4], // low
-                                    el[2]  // close
+                                    el.MTS, // time
+                                    el.Open, // open
+                                    el.High, // high
+                                    el.Low, // low
+                                    el.Close  // close
                                 ]);
                             vm.volume.push([
-                                el[0], // the date
-                                el[5] // the volume
+                                el.MTS, // the date
+                                el.Volume // the volume
                             ]);
                         });
 

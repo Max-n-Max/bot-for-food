@@ -25,15 +25,11 @@ app.service('MainService',
             };
 
             self.getCandles = function (_data) {
-                /*var data = {
-                    from: "2019-11-15",
-                    to: "2019-11-16",
-                    pair: "BTCUSD"
-                };*/
-                return Items.getJson('json-mock/getCandles.json')
-                //return apiClient.getCandles(path, _data)
+
+                //return Items.getJson('json-mock/getCandles.json')
+                return apiClient.getCandlesHistory(_data)
                     .then(function (data) {
-                            return data;
+                            return data.Snapshot;
                         },
                         function (error) {
                             console.error(error);
