@@ -10,6 +10,7 @@
     "angular-material-icons": "^0.7.1",
     "angular-route": "^1.7.8",
     "angular-ui-router": "^1.0.23",
+    "md-date-range-picker": "^0.8.4",
     "underscore": "^1.9.1"
   },
   "devDependencies": {},

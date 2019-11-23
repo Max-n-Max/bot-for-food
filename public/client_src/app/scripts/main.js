@@ -15,9 +15,12 @@ app.controller('MainCtrl',
             vm.flags_buy = [];
             vm.flags_sell = [];
 
-            vm.startDate = new Date();
-            vm.endDate = new Date();
-            vm.startDate.setDate(this.endDate.getDate() - 5);
+            // vm.startDate = new Date();
+            // vm.endDate = new Date();
+            // vm.startDate.setDate(this.endDate.getDate() - 5);
+            vm.pickerRange = {};
+
+
 
             vm.candlesLimit = 200;
 

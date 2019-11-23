@@ -4,18 +4,20 @@
         <div layout="row">
             <div layout="column">
 
-                <div layout="column" flex-order="1" flex-order-gt-sm="0">
-                    <md-subheader>Start Date</md-subheader>
-                    <md-calendar ng-model="vm.startDate"></md-calendar>
-                </div>
-
-                <div layout="column" flex-order="1" flex-order-gt-sm="1">
-                    <md-subheader>End Date</md-subheader>
-                    <md-calendar ng-model="vm.endDate"></md-calendar>
-                </div>
 
 
 
+
+
+<!--                <div layout="column" flex-order="1" flex-order-gt-sm="0">-->
+<!--                    <md-subheader>Start Date</md-subheader>-->
+<!--                    <md-calendar ng-model="vm.startDate"></md-calendar>-->
+<!--                </div>-->
+
+<!--                <div layout="column" flex-order="1" flex-order-gt-sm="1">-->
+<!--                    <md-subheader>End Date</md-subheader>-->
+<!--                    <md-calendar ng-model="vm.endDate"></md-calendar>-->
+<!--                </div>-->
 <!--                <md-input-container class="md-block" flex-gt-sm>-->
 <!--                    <label>First name</label>-->
 <!--                    <input ng-model="vm.config.colsize">-->
@@ -23,6 +25,10 @@
             </div>
 
             <div layout="column" flex-order="0" flex-order-gt-sm="2">
+                <md-date-range ng-model="vm.pickerRange"></md-date-range>
+
+                <pre style="font-size:8px">{{vm.pickerRange|json}}</pre>
+
                 <md-select ng-model="vm.candleResolutionValue"
                            ng-change="vm.onCandleResolutionChange(vm.candleResolutionValue)"
                            aria-label="selected candleResolution">
