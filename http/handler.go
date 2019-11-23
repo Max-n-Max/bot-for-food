@@ -92,7 +92,8 @@ func enrichOrderBook(orderbook string, wall, sumWall float64, reqWindow float64)
 		}
 
 		if window >= reqWindow{
-			copyOrder := resources.OrderBookRes{Timestamp:o.Timestamp,
+			copyOrder := resources.OrderBookRes{
+				Timestamp:o.Timestamp,
 				Pair:o.Pair,
 				Bids:o.Bids,
 				Asks:o.Asks,
