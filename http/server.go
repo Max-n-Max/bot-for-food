@@ -21,6 +21,7 @@ func NewManager(handler Handler, config config.Manager) *Manager {
 }
 
 func (m *Manager) Run() {
+	log.Println("Starting server...")
 	router := mux.NewRouter().StrictSlash(true)
 	router.HandleFunc("/orderbook", m.handler.OrderBookHandler).Methods("POST")
 	router.HandleFunc("/candles/history", m.handler.CandlesHistoryHandler).Methods("POST")

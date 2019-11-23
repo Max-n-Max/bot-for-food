@@ -3,6 +3,7 @@ package collector
 import (
 	"fmt"
 	"github.com/Max-n-Max/bot-for-food/exchange"
+	"log"
 	"time"
 )
 
@@ -14,6 +15,8 @@ type Manager struct {
 }
 
 func NewManager(manager exchange.Manager) *Manager{
+	log.Println("Starting collector...")
+
 	c := new(Manager)
 	c.ExchangeManager = manager
 
