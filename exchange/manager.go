@@ -7,6 +7,7 @@ import (
 	"github.com/bitfinexcom/bitfinex-api-go/v1"
 	bitfinexV2 "github.com/bitfinexcom/bitfinex-api-go/v2"
 	v2 "github.com/bitfinexcom/bitfinex-api-go/v2/rest"
+	"log"
 )
 
 type Manager struct {
@@ -17,6 +18,7 @@ type Manager struct {
 }
 
 func NewManager(config config.Manager) *Manager {
+	log.Println("Starting exchange...")
 	m := new(Manager)
 	m.clientV1 = bitfinex.NewClient()
 	m.clientV1.Auth(config.GetString("key"), config.GetString("secret"))
