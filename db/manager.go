@@ -7,6 +7,7 @@ import (
 	"github.com/Max-n-Max/bot-for-food/resources"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
+	"log"
 	"time"
 )
 
@@ -16,6 +17,7 @@ type Manager struct {
 }
 
 func NewManager(config config.Manager) (*Manager, error){
+	log.Println("Starting DB...")
 	m := new(Manager)
 	m.dbName = config.GetString("db.database")
 	info := &mgo.DialInfo{
