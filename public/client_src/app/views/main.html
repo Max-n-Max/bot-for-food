@@ -25,9 +25,9 @@
             </div>
 
             <div layout="column" flex-order="0" flex-order-gt-sm="2">
-                <md-date-range ng-model="vm.pickerRange"></md-date-range>
+                <md-date-range ng-model="vm.pickerRange" md-on-select="vm.onDateChange()"></md-date-range>
 
-                <pre style="font-size:8px">{{vm.pickerRange|json}}</pre>
+<!--                <pre style="font-size:8px">{{vm.pickerRange|json}}</pre>-->
 
                 <md-select ng-model="vm.candleResolutionValue"
                            ng-change="vm.onCandleResolutionChange(vm.candleResolutionValue)"

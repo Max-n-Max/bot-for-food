@@ -19,24 +19,25 @@ app.controller('MainCtrl',
             // vm.endDate = new Date();
             // vm.startDate.setDate(this.endDate.getDate() - 5);
             vm.pickerRange = {};
-
-
+            vm.pickerRange.dateStart = new Date();
+            vm.pickerRange.dateEnd = new Date();
+            vm.pickerRange.dateStart.setDate(vm.pickerRange.dateEnd.getDate() - 2);
 
             vm.candlesLimit = 200;
 
             vm.candleResolutionOptions = [
-                {value:"1m", name: "1 min"},
-                {value:"5m", name: "5 mins"},
-                {value:"15m", name: "15 mins"},
-                {value:"30m", name: "30 mins"},
-                {value:"1h", name: "1 hour"},
-                {value:"3h", name: "3 hours"},
-                {value:"6h", name: "6 hours"},
-                {value:"12h", name: "12 hours"},
-                {value:"1D", name: "1 day"},
-                {value:"7D", name: "1 week"},
-                {value:"14D", name: "2 weeks"},
-                {value:"1M", name: "1 month"},
+                {value:"1m", name: "1 min", id:60},
+                {value:"5m", name: "5 mins", id:60*5},
+                {value:"15m", name: "15 mins", id:60*15},
+                {value:"30m", name: "30 mins", id:60*30},
+                {value:"1h", name: "1 hour", id:60*60},
+                {value:"3h", name: "3 hours", id:60*60*3},
+                {value:"6h", name: "6 hours", id:60*60*6},
+                {value:"12h", name: "12 hours", id:60*60*12},
+                {value:"1D", name: "1 day", id:60*60*24},
+                {value:"7D", name: "1 week", id:60*60*24*7},
+                {value:"14D", name: "2 weeks", id:60*60*24*14},
+                {value:"1M", name: "1 month", id:60*60*24*30},
             ];
 
 
@@ -69,7 +70,23 @@ app.controller('MainCtrl',
                 colsize: 6000
             };
 
+
+            vm.onDateChange = function(){
+                getCandles();
+            };
+
+
             vm.onCandleResolutionChange = function(_value){
+
+                var obj = _.findWhere(vm.candleResolutionOptions, {value: _value});
+
+                //get range in minutes:
+                var dateRange = vm.pickerRange.dateEnd.getTime() - vm.pickerRange.dateStart.getTime();
+
+                dateRange = Math.round(dateRange/1000); // in sec
+
+                vm.candlesLimit = dateRange/obj.id;
+
                 getCandles();
             }
 
@@ -118,8 +135,8 @@ app.controller('MainCtrl',
                 var data = {
                     pair: vm.pairValue,
                     resolution: vm.candleResolutionValue,
-                    start: 1574199919404,//new Date().getTime() - 200 * 3600,
-                    end:   1574286319404,//new Date().getTime(),
+                    start: vm.pickerRange.dateStart.getTime(),//1574199919404,//new Date().getTime() - 200 * 3600,
+                    end:   vm.pickerRange.dateEnd.getTime(),//1574286319404,//new Date().getTime(),
                     limit: parseInt(vm.candlesLimit),
                     oldest_first: false
 
@@ -432,14 +449,21 @@ app.controller('MainCtrl',
             }
 
 
-            // $scope.$watch(function(){
-            //     return vm.config.colsize;
-            // } , function (newVal, oldVal) {
-            //     if (newVal != oldVal) {
-            //         vm.heatmapChart.redraw();
-            //         vm.heatmapChart.reflow();
-            //     }
-            // });
+//             $scope.$watch(function(){
+//                 return vm.pickerRange;
+//             } , function (newVal, oldVal) {
+//                 if (newVal != oldVal
+//                 &&  (newVal.dateStart != oldVal.dateStart
+//                     || newVal.dateEnd != oldVal.dateEnd)
+//                 ) {
+//
+//                     // vm.pickerRange = {};
+//                     // vm.pickerRange.dateStart = new Date();
+//                     // vm.pickerRange.dateEnd = new Date();
+//                     // vm.pickerRange.dateStart.setDate(vm.pickerRange.dateEnd.getDate() - 2);
+// alert(1);
+//                 }
+//             },true);
 
             vm.reloadHeatmap = function (){
 
