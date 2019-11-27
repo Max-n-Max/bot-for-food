@@ -30,3 +30,12 @@ type OrderBookReqBody struct {
 	SumWall float64 `json:"sumwall"`
 	Window  float64 `json:"window"`
 }
+
+type StartOrderBookCollectorBody struct {
+	Pair     string `json:"pair"`
+	Interval int    `json:"interval"`
+}
+
+type StopOrderBookCollectorBody struct {
+	Pair string `json:"pair"`
+}

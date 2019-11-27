@@ -3,6 +3,7 @@ package http
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/Max-n-Max/bot-for-food/collector"
 	"github.com/Max-n-Max/bot-for-food/config"
 	"github.com/Max-n-Max/bot-for-food/db"
 	"github.com/Max-n-Max/bot-for-food/exchange"
@@ -16,12 +17,14 @@ import (
 type Handler struct {
 	db       *db.Manager
 	exchange exchange.Manager
+	collector *collector.Manager
 	config   config.Manager
 }
 
-func NewHandler(db *db.Manager, exchange exchange.Manager, config config.Manager) *Handler {
+func NewHandler(collector *collector.Manager, db *db.Manager, exchange exchange.Manager, config config.Manager) *Handler {
 	log.Println("Starting http handler...")
 	h := new(Handler)
+	h.collector = collector
 	h.db = db
 	h.exchange = exchange
 	h.config = config
@@ -29,7 +32,28 @@ func NewHandler(db *db.Manager, exchange exchange.Manager, config config.Manager
 	return h
 }
 
-func (h *Handler) OrderBookHandler(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) StartCollectorHandler(w http.ResponseWriter, r *http.Request) {
+	decoder := json.NewDecoder(r.Body)
+	var rBody resources.StartOrderBookCollectorBody
+	err := decoder.Decode(&rBody)
+	if err != nil {
+		panic(err)
+	}
+
+	h.collector.StartOrderBookCollection(rBody.Pair, rBody.Interval)
+}
+
+func (h *Handler) StopCollectorHandler(w http.ResponseWriter, r *http.Request) {
+	decoder := json.NewDecoder(r.Body)
+	var rBody resources.StopOrderBookCollectorBody
+	err := decoder.Decode(&rBody)
+	if err != nil {
+		panic(err)
+	}
+
+	h.collector.StopCollection(rBody.Pair)
+}
+func (h *Handler) GetOrderBookHandler(w http.ResponseWriter, r *http.Request) {
 	decoder := json.NewDecoder(r.Body)
 	var rBody resources.OrderBookReqBody
 	err := decoder.Decode(&rBody)
@@ -49,7 +73,7 @@ func (h *Handler) OrderBookHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 }
 
-func (h *Handler) CandlesHistoryHandler(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) GetCandlesHistoryHandler(w http.ResponseWriter, r *http.Request) {
 	decoder := json.NewDecoder(r.Body)
 	var rBody resources.CandlesHistoryBody
 	err := decoder.Decode(&rBody)
