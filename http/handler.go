@@ -69,7 +69,12 @@ func (h *Handler) GetOrderBookHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Calculate walls and window and add it to result
 	enOB := enrichOrderBook(res, rBody.Wall, rBody.SumWall, rBody.Window)
-	w.Write([]byte(enOB))
+	responseBody := enOB
+
+	if responseBody == "" || responseBody == "null"{
+		responseBody = "{}"
+	}
+	w.Write([]byte(responseBody))
 	w.Header().Set("Content-Type", "application/json")
 }
 
