@@ -15,10 +15,10 @@ import (
 )
 
 type Handler struct {
-	db       *db.Manager
-	exchange exchange.Manager
+	db        *db.Manager
+	exchange  exchange.Manager
 	collector *collector.Manager
-	config   config.Manager
+	config    config.Manager
 }
 
 func NewHandler(collector *collector.Manager, db *db.Manager, exchange exchange.Manager, config config.Manager) *Handler {
@@ -100,7 +100,7 @@ func (h *Handler) GetCandlesHistoryHandler(w http.ResponseWriter, r *http.Reques
 
 }
 
-func enrichOrderBook(orderbook string, wall, sumWall float64, reqWindow float64) string{
+func enrichOrderBook(orderbook string, wall, sumWall float64, reqWindow float64) string {
 	var OB []resources.OrderBook
 	var res []resources.OrderBookRes
 	err := json.Unmarshal([]byte(orderbook), &OB)
@@ -115,15 +115,15 @@ func enrichOrderBook(orderbook string, wall, sumWall float64, reqWindow float64)
 			window = 2 * (aWall - bWall) / (aWall + bWall)
 		}
 
-		if window >= reqWindow{
+		if window >= reqWindow {
 			copyOrder := resources.OrderBookRes{
-				Timestamp:o.Timestamp,
-				Pair:o.Pair,
-				Bids:o.Bids,
-				Asks:o.Asks,
-				BidsWall:bWall,
-				AsksWall:aWall,
-				Window:window,
+				Timestamp: o.Timestamp,
+				Pair:      o.Pair,
+				Bids:      o.Bids,
+				Asks:      o.Asks,
+				BidsWall:  bWall,
+				AsksWall:  aWall,
+				Window:    window,
 			}
 			res = append(res, copyOrder)
 		}
@@ -136,7 +136,6 @@ func enrichOrderBook(orderbook string, wall, sumWall float64, reqWindow float64)
 	return string(resJson)
 }
 
-
 func getWall(asks []bitfinex.OrderBookEntry, wall, sumWall float64) float64 {
 	var sum float64 = 0
 	for _, o := range asks {
@@ -148,7 +147,7 @@ func getWall(asks []bitfinex.OrderBookEntry, wall, sumWall float64) float64 {
 		if err != nil {
 			fmt.Println("Cannot convert amount: ", o.Amount, err)
 		}
-		sum += price*amount
+		sum += price * amount
 
 		if sum >= sumWall && price*amount >= wall {
 			return price

@@ -8,5 +8,6 @@ require (
 	github.com/gorilla/websocket v1.4.1 // indirect
 	github.com/op/go-logging v0.0.0-20160315200505-970db520ece7 // indirect
 	github.com/spf13/viper v1.5.0
+	github.com/stretchr/testify v1.2.2
 	gopkg.in/mgo.v2 v2.0.0-20190816093944-a6b53ec6cb22
 )
