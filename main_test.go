@@ -24,7 +24,7 @@ func TestListenOnChage(t *testing.T){
 		return
 	}
 
-	_, err = client.SubscribeTrades(context.Background(), bitfinex.TradingPrefix+bitfinex.ETHBTC)
+	_, err = client.SubscribeTrades(context.Background(), bitfinex.TradingPrefix + "ETPUSD")
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -26,7 +26,17 @@ app.config(['$locationProvider', '$stateProvider', '$urlRouterProvider',
                         controllerAs: 'vm'
                     }
                 }
-            });
+            })
+            .state('sidemenu.trade_watch', {
+                    url: '/tradewatch',
+                    views: {
+                        'content': {
+                            templateUrl: 'views/trade-watch.html',
+                            controller: 'TradeWatchCtrl',
+                            controllerAs: 'vm'
+                        }
+                    }
+                });
 
 
         $urlRouterProvider.otherwise(function ($injector, $location) {

@@ -8,7 +8,6 @@ import (
 )
 
 
-
 func main() {
 	config := config.NewManager("./config", "./config/creds", "config")
 	exchange := exchange.NewManager(config)
@@ -23,5 +22,6 @@ func main() {
 	//collector.Execute(*collect, *db, config)
 	http.Run()
 }
+
 
 //TODO Graceful shutdown
