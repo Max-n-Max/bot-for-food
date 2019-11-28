@@ -42,7 +42,8 @@ app.service('apiClient', ['$http', '$q',
 
         return {
             getOrderbook: function (data) {return request('get_order_book',data);},
-            getCandlesHistory: function (data) {return request('get_candles_history',data);}
+            getCandlesHistory: function (data) {return request('get_candles_history',data);},
+            collectOrderbookChangeStatus: function (data) {return request(('collect/orderbook/' + data.type), data);}
 
 
 

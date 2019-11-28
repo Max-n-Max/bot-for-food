@@ -6,23 +6,28 @@ app.service('MainService',
 
             var self = this;
 
-            self.getOrderbook = function (_data) {
+            var SELECTED_PAIR = "BTCUSD";
 
-                var data = {
-                    date_start: "2019-11-17",
-                    date_end: "2019-11-19",
-                    pair: "BTCUSD"
-                }
-
-                return apiClient.getOrderbook(data)
-                    .then(function (data) {
-                        return data;
-                    },
-                    function (error) {
-                        console.error(error);
-                        return $q.reject(error);
-                    });
+            self.getActivePair = function(){
+               return SELECTED_PAIR;
             };
+            self.setActivePair = function(_pair){
+                SELECTED_PAIR = _pair;
+            };
+
+
+            self.collectOrderbookChangeStatus = function (_data) {
+
+               return apiClient.collectOrderbookChangeStatus(_data)
+                    .then(function (data) {
+                            return data;
+                        },
+                        function (error) {
+                            console.error(error);
+                            return $q.reject(error);
+                        });
+            };
+
 
             self.getCandles = function (_data) {
 
@@ -53,9 +58,28 @@ app.service('MainService',
                         });
             };
 
+            function getOrderbook(_data) {
+
+                var data = {
+                    date_start: "2019-11-17",
+                    date_end: "2019-11-19",
+                    pair: "BTCUSD"
+                }
+
+                return apiClient.getOrderbook(data)
+                    .then(function (data) {
+                            return data;
+                        },
+                        function (error) {
+                            console.error(error);
+                            return $q.reject(error);
+                        });
+            };
+
+
             self.getHeatMap = function (_data) {
                 //return Items.getJson('json-mock/getHeatMap.json')
-                return self.getOrderbook(_data) // temp usage
+                return getOrderbook(_data) // temp usage
                     .then(function (data) {
                             return data;
                         },

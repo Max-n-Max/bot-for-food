@@ -21,3 +21,8 @@ app.run(['$rootScope',
         console.log("The app is called");
 
     }]); // end run()
+
+
+app.config(function($mdThemingProvider) {
+    $mdThemingProvider.theme('custom-toast')
+});

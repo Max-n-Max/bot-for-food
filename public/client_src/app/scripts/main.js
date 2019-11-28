@@ -2,8 +2,8 @@
 
 
 app.controller('MainCtrl',
-    ['$scope','$mdToast', '$timeout', 'MainService',
-        function ($scope, $mdToast, $timeout, MainService) {
+    ['$rootScope', '$scope','$mdToast', '$timeout', 'MainService',
+        function ($rootScope, $scope, $mdToast, $timeout, MainService) {
 
             console.log("init MainCtrl");
 
@@ -92,6 +92,7 @@ app.controller('MainCtrl',
 
             vm.onPairChange = function(_value){
                 getCandles();
+                $rootScope.$broadcast("onPairChange", {data: _value});
             }
 
             function run() {
