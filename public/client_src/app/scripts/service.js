@@ -1,18 +1,19 @@
 'use strict';
 
 app.service('MainService',
-    ['apiClient', '$q','Items',
-        function (apiClient, $q, Items) {
+    ['apiClient', '$q','Items','localStorageService',
+        function (apiClient, $q, Items, localStorageService) {
 
             var self = this;
 
-            var SELECTED_PAIR = "BTCUSD";
+            var SELECTED_PAIR = localStorageService.get('selectedPair') || "BTCUSD";
 
             self.getActivePair = function(){
                return SELECTED_PAIR;
             };
             self.setActivePair = function(_pair){
                 SELECTED_PAIR = _pair;
+                localStorageService.set('selectedPair', _pair);
             };
 
 
@@ -43,10 +44,6 @@ app.service('MainService',
             };
 
             self.getOrderFlags = function (_data) {
-                /*var data = {
-                    from: "2019-11-15",
-                    to: "2019-11-16"
-                };*/
                 return Items.getJson('json-mock/getOrderFlags.json')
                 //return apiClient.getOrderFlags(path, _data)
                     .then(function (data) {
@@ -58,36 +55,29 @@ app.service('MainService',
                         });
             };
 
-            function getOrderbook(_data) {
-
-                var data = {
-                    date_start: "2019-11-17",
-                    date_end: "2019-11-19",
-                    pair: "BTCUSD"
-                }
-
-                return apiClient.getOrderbook(data)
-                    .then(function (data) {
-                            return data;
-                        },
-                        function (error) {
-                            console.error(error);
-                            return $q.reject(error);
-                        });
-            };
+            self.getOrderbook = function(_data) {
+                return apiClient.getOrderbook(_data)
+                        .then(function (data) {
+                                return data;
+                            },
+                            function (error) {
+                                console.error(error);
+                                return $q.reject(error);
+                            });
+                };
 
 
-            self.getHeatMap = function (_data) {
-                //return Items.getJson('json-mock/getHeatMap.json')
-                return getOrderbook(_data) // temp usage
-                    .then(function (data) {
-                            return data;
-                        },
-                        function (error) {
-                            console.error(error);
-                            return $q.reject(error);
-                        });
-            };
+            // self.getHeatMap = function (_data) {
+            //     //return Items.getJson('json-mock/getHeatMap.json')
+            //     return getOrderbook(_data) // temp usage
+            //         .then(function (data) {
+            //                 return data;
+            //             },
+            //             function (error) {
+            //                 console.error(error);
+            //                 return $q.reject(error);
+            //             });
+            // };
 
 
         }]);

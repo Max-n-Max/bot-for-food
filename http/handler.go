@@ -53,6 +53,11 @@ func (h *Handler) StopCollectorHandler(w http.ResponseWriter, r *http.Request) {
 
 	h.collector.StopCollection(rBody.Pair)
 }
+
+func (h *Handler) GetBotInfoHandler(w http.ResponseWriter, r *http.Request){
+
+}
+
 func (h *Handler) GetOrderBookHandler(w http.ResponseWriter, r *http.Request) {
 	decoder := json.NewDecoder(r.Body)
 	var rBody resources.OrderBookReqBody
@@ -68,7 +73,7 @@ func (h *Handler) GetOrderBookHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Calculate walls and window and add it to result
-	enOB := enrichOrderBook(res, rBody.Wall, rBody.SumWall, rBody.Window)
+	enOB := enrichOrderBook(res, rBody.Wall, rBody.SumWall, rBody.Window, rBody.SkipbB)
 	responseBody := enOB
 
 	if responseBody == "" || responseBody == "null"{
@@ -105,7 +110,8 @@ func (h *Handler) GetCandlesHistoryHandler(w http.ResponseWriter, r *http.Reques
 
 }
 
-func enrichOrderBook(orderbook string, wall, sumWall float64, reqWindow float64) string {
+//TODO: worth to move to separate module, (in current handler we deal with http only)
+func enrichOrderBook(orderbook string, wall, sumWall float64, reqWindow float64, skipOrderBookData bool) string {
 	var OB []resources.OrderBook
 	var res []resources.OrderBookRes
 	err := json.Unmarshal([]byte(orderbook), &OB)
@@ -121,15 +127,24 @@ func enrichOrderBook(orderbook string, wall, sumWall float64, reqWindow float64)
 		}
 
 		if window >= reqWindow {
+
+			var bids []bitfinex.OrderBookEntry
+			var asks []bitfinex.OrderBookEntry
+			if !skipOrderBookData {
+				bids = o.Bids
+				asks = o.Asks
+			}
+
 			copyOrder := resources.OrderBookRes{
 				Timestamp: o.Timestamp,
 				Pair:      o.Pair,
-				Bids:      o.Bids,
-				Asks:      o.Asks,
+				Bids:      bids,
+				Asks:      asks,
 				BidsWall:  bWall,
 				AsksWall:  aWall,
 				Window:    window,
 			}
+
 			res = append(res, copyOrder)
 		}
 	}

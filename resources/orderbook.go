@@ -29,6 +29,7 @@ type OrderBookReqBody struct {
 	Wall    float64 `json:"wall"`
 	SumWall float64 `json:"sumwall"`
 	Window  float64 `json:"window"`
+	SkipbB  bool    `json:"skip_orderbook"`
 }
 
 type StartOrderBookCollectorBody struct {

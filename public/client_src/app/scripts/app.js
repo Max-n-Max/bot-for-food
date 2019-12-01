@@ -11,7 +11,8 @@ var app = angular
         'ngRoute',
         'ui.router',
         'ngMdIcons',
-        'ngMaterialDateRangePicker'
+        'ngMaterialDateRangePicker',
+        'LocalStorageModule'
     ],);
 
 

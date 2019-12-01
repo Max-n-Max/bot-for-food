@@ -2,10 +2,11 @@
 
 
 app.controller('MainCtrl',
-    ['$rootScope', '$scope','$mdToast', '$timeout', 'MainService',
-        function ($rootScope, $scope, $mdToast, $timeout, MainService) {
+    ['$rootScope', '$scope','$mdToast', '$timeout', '$filter','MainService',
+        function ($rootScope, $scope, $mdToast, $timeout, $filter, MainService) {
 
             console.log("init MainCtrl");
+
 
             var vm = this;
 
@@ -14,6 +15,8 @@ app.controller('MainCtrl',
             vm.volume = [];
             vm.flags_buy = [];
             vm.flags_sell = [];
+            vm.walls = [];
+
 
             // vm.startDate = new Date();
             // vm.endDate = new Date();
@@ -60,11 +63,18 @@ app.controller('MainCtrl',
             ];
 
 
-            vm.pairValue = angular.copy(vm.pairOptions[0].value);
+            vm.pairValue = vm.selectePair = MainService.getActivePair(); //angular.copy(vm.pairOptions[0].value);
 
             vm.reloadCandles = function(){
                 getCandles();
             };
+
+            vm.reloadOrders = function(){
+                getOrderbook();
+            };
+
+
+
 
             vm.config = {
                 colsize: 6000
@@ -97,42 +107,77 @@ app.controller('MainCtrl',
 
             function run() {
 
+                getOrderbook();
+
                 getCandles();
 
-                getOrderFlags();
+                // getOrderFlags();
 
-                // getOrderbook();
+
 
                 // getHeatMap();
             }
 
-            // function getOrderbook(){
-            //     var data = {};
-            //     MainService.getOrderbook(data).then(function (_data) {
-            //         vm.data = _data;
-            //     }, function (error) {
-            //         console.error(error);
-            //
-            //         $mdToast.show($mdToast.simple().content('Reason: ' + error.status)
-            //             .position('top right').hideDelay(5000))
-            //             .then(function () {
-            //             });
-            //     });
-            // }
+            function getOrderbook(){
+
+                var to = angular.copy(vm.pickerRange.dateEnd).setDate(vm.pickerRange.dateEnd.getDate() + 1);
+
+                var data = {
+                    from: $filter('date')(vm.pickerRange.dateStart, 'yyyy-MM-dd'),//"2019-11-28",
+                    to:   $filter('date')(to, 'yyyy-MM-dd'), // we want to take one day more, DB
+                    wall: 2000.0,
+                    sumwall: 2000.0,
+                    window : 0.002,
+                    pair: vm.pairValue,
+                    skip_orderbook:true
+                };
+                MainService.getOrderbook(data).then(function (_data) {
+
+                    /* [1483232400000, 1.4, 4.7],*/
+
+                    vm.walls = [];
+
+                    _.forEach(_data, function (el, index, arr) {
+
+                        var date = new Date(
+                            el.Timestamp.split(' ')[0] + ' ' + el.Timestamp.split(' ')[1]
+                        ).getTime();
+
+                        var obj = [date, el.BidsWall, el.AsksWall];
+
+                        vm.walls.push(obj);
+
+                        //-----
+
+
+                        // vm.flags_buy.push({
+                        //     x: date,
+                        //     title: 'B',
+                        //     text: "bought " + el.BidsWall
+                        // });
+                        //
+                        // vm.flags_sell.push({
+                        //     x: date,
+                        //     title: 'S',
+                        //     text: "sold " + el.AsksWall
+                        // });
+
+                    });
+
+                    getCandles();
+
+                }, function (error) {
+                    console.error(error);
+
+                    $mdToast.show($mdToast.simple().content('Reason: ' + error.status)
+                        .position('top right').hideDelay(5000))
+                        .then(function () {
+                        });
+                });
+            }
 
 
             function getCandles() {
-
-                /*  Pair        string `json:"pair"`
-                    Resolution  string `json:"resolution"`
-                    Start       int64  `json:"start"`
-                    End         int64  `json:"end"`
-                    Limit       int    `json:"limit"`
-                    OldestFirst bool   `json:"oldest_first"`
-                    */
-
-
-
                 var data = {
                     pair: vm.pairValue,
                     resolution: vm.candleResolutionValue,
@@ -183,34 +228,6 @@ app.controller('MainCtrl',
 
             }
 
-
-            function getOrderFlags() {
-                MainService.getOrderFlags({}).then(
-                    function successCallback(response) {
-
-
-
-                        _.forEach(response, function (el, index, arr) {
-
-                            if (el.type == 'buy') {
-                                vm.flags_buy.push({
-                                    x: el.timestamp,
-                                    title: 'B',
-                                    text: "bought " + el.value
-                                });
-                            } else if (el.type == 'sell') {
-                                vm.flags_sell.push({
-                                    x: el.timestamp,
-                                    title: 'S',
-                                    text: "sold " + el.value
-                                });
-                            }
-                        });
-
-                    }, function errorCallback(response) {
-                        console.error(response);
-                    });
-            }
 
             var step = -1;
 
@@ -358,8 +375,39 @@ app.controller('MainCtrl',
 
                 // create the chart
                 Highcharts.stockChart('stock', {
+                    // rangeSelector: {
+                    //     selected: 1
+                    // },
                     rangeSelector: {
-                        selected: 1
+                        enabled: true,
+                        buttons: [
+                        //     {
+                        //     type: 'month',
+                        //     count: 1,
+                        //     text: '1m'
+                        // }, {
+                        //     type: 'month',
+                        //     count: 3,
+                        //     text: '3m'
+                        // }, {
+                        //     type: 'month',
+                        //     count: 6,
+                        //     text: '6m'
+                        // }, {
+                        //     type: 'ytd',
+                        //     text: 'YTD'
+                        // }, {
+                        //     type: 'year',
+                        //     count: 1,
+                        //     text: '1y'
+                        // }, {
+                        //     type: 'all',
+                        //     text: 'All'
+                        // },
+                         {
+                            type: 'today',
+                            text: 'Today'
+                        }]
                     },
                     chart: {backgroundColor: "rgba(0,0,0,0)"},
                     title: {
@@ -402,15 +450,16 @@ app.controller('MainCtrl',
                         }
                     },
 
-                    series: [{
+                    series: [
+                        {
                         type: 'candlestick',
-                        name: 'ETP-BTC',
+                        name: 'XXX-BTC',
                         data: vm.candles,
                         id: 'dataseries',
                         // dataGrouping: {
                         //     units: groupingUnits
                         // }
-                    },
+                       },
                         {
                             type: 'column',
                             name: 'Volume',
@@ -419,7 +468,16 @@ app.controller('MainCtrl',
                             // dataGrouping: {
                             //     units: groupingUnits
                             // }
-                        }, {
+                        },
+                        {
+                            type: 'arearange',
+                            color: 'rgba(0,166,244,0.46)',
+                            dataLabels: {
+                                enabled: true
+                            },
+                            data: vm.walls
+                        },
+                        {
                             type: 'flags',
                             data: vm.flags_buy,
                             color: '#39f439',

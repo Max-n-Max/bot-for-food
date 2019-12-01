@@ -2,73 +2,88 @@
     <div flex="50">
 
         <div layout="row">
-            <div layout="column">
+        <md-card md-theme-watch>
+            <md-card-title>
+                <md-card-title-text>
+                    <span class="md-subhead">Main Preferences</span>
+                </md-card-title-text>
+            </md-card-title>
+
+            <md-card-content>
+
+                <div layout="column">
+                </div>
+
+                <div layout="column" flex-order="0" flex-order-gt-sm="2">
+                    <md-date-range ng-model="vm.pickerRange" md-on-select="vm.onDateChange()"></md-date-range>
+
+                    <!--                <pre style="font-size:8px">{{vm.pickerRange|json}}</pre>-->
+
+                    <md-select ng-model="vm.candleResolutionValue"
+                               ng-change="vm.onCandleResolutionChange(vm.candleResolutionValue)"
+                               aria-label="selected candleResolution">
+                        <md-option
+                                style="border-bottom: none;padding-left: 6px;"
+                                ng-value="cr.value"
+                                ng-repeat="cr in vm.candleResolutionOptions track by cr.value"
+                                ng-bind="cr.name">
+                        </md-option>
+                    </md-select>
+
+                    <md-select ng-model="vm.pairValue"
+                               ng-change="vm.onPairChange(vm.pairValue)"
+                               aria-label="selected candleResolution">
+                        <md-option
+                                style="border-bottom: none;padding-left: 6px;"
+                                ng-value="p.value"
+                                ng-repeat="p in vm.pairOptions track by p.value"
+                                ng-bind="p.name">
+                        </md-option>
+                    </md-select>
+
+                    <md-input-container class="md-block">
+                        <label>limit</label>
+                        <input ng-model="vm.candlesLimit">
+                    </md-input-container>
+
+                    <md-button class="md-raised md-primary"
+                               ng-click="vm.reloadCandles()">Reload Candles
+                    </md-button>
+                </div>
 
 
-<!--                <div layout="column" flex-order="1" flex-order-gt-sm="0">-->
-<!--                    <md-subheader>Start Date</md-subheader>-->
-<!--                    <md-calendar ng-model="vm.startDate"></md-calendar>-->
-<!--                </div>-->
+                <div class="row" style="margin: 20px;">
+                    <div id="heatmap"
+                         ng-if="vm.heatmap.length > 0"
+                         style="height: 700px; max-width: 700px; margin: 0 auto"></div>
+                </div>
 
-<!--                <div layout="column" flex-order="1" flex-order-gt-sm="1">-->
-<!--                    <md-subheader>End Date</md-subheader>-->
-<!--                    <md-calendar ng-model="vm.endDate"></md-calendar>-->
-<!--                </div>-->
-<!--                <md-input-container class="md-block" flex-gt-sm>-->
-<!--                    <label>First name</label>-->
-<!--                    <input ng-model="vm.config.colsize">-->
-<!--                </md-input-container>-->
-            </div>
-
-            <div layout="column" flex-order="0" flex-order-gt-sm="2">
-                <md-date-range ng-model="vm.pickerRange" md-on-select="vm.onDateChange()"></md-date-range>
-
-<!--                <pre style="font-size:8px">{{vm.pickerRange|json}}</pre>-->
-
-                <md-select ng-model="vm.candleResolutionValue"
-                           ng-change="vm.onCandleResolutionChange(vm.candleResolutionValue)"
-                           aria-label="selected candleResolution">
-                    <md-option
-                            style="border-bottom: none;padding-left: 6px;"
-                            ng-value="cr.value"
-                            ng-repeat="cr in vm.candleResolutionOptions track by cr.value"
-                            ng-bind="cr.name">
-                    </md-option>
-                </md-select>
-
-                <md-select ng-model="vm.pairValue"
-                           ng-change="vm.onPairChange(vm.pairValue)"
-                           aria-label="selected candleResolution">
-                    <md-option
-                            style="border-bottom: none;padding-left: 6px;"
-                            ng-value="p.value"
-                            ng-repeat="p in vm.pairOptions track by p.value"
-                            ng-bind="p.name">
-                    </md-option>
-                </md-select>
-
-                <md-input-container class="md-block">
-                    <label>limit</label>
-                    <input ng-model="vm.candlesLimit">
-                </md-input-container>
-
-                <md-button class="md-raised md-primary"
-                           ng-click="vm.reloadCandles()">Reload Candles
-                </md-button>
-            </div>
+            </md-card-content>
+        </md-card>
 
 
-            <div class="row" style="margin: 20px;">
-                <div id="heatmap"
-                     ng-if="vm.heatmap.length > 0"
-                     style="height: 700px; max-width: 700px; margin: 0 auto"></div>
-            </div>
-        </div>
+            <md-card md-theme-watch>
+                <md-card-title>
+                    <md-card-title-text>
+                        <span class="md-subhead">Main Preferences</span>
+                    </md-card-title-text>
+                </md-card-title>
+
+                <md-card-content>
+
+
+                    <md-button class="md-raised md-primary"
+                               ng-click="vm.reloadOrders()">Reload Orders
+                    </md-button>
+
+                </md-card-content>
+            </md-card>
+
+    </div>
     </div>
 
 
     <div flex="50">
         <div id="stock" style="height: 500px; min-width: 310px;"></div>
     </div>
-
 </div>

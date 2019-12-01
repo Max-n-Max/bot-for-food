@@ -9,7 +9,7 @@ import (
 
 type Manager struct {
 	handler Handler
-	config   config.Manager
+	config  config.Manager
 }
 
 func NewManager(handler Handler, config config.Manager) *Manager {
@@ -23,10 +23,11 @@ func NewManager(handler Handler, config config.Manager) *Manager {
 func (m *Manager) Run() {
 	log.Println("Starting server...")
 	router := mux.NewRouter().StrictSlash(true)
-	router.HandleFunc("/get_order_book",      m.handler.GetOrderBookHandler).Methods("POST")
-	router.HandleFunc("/get_candles_history", m.handler.GetCandlesHistoryHandler).Methods("POST")
-	router.HandleFunc("/collect/orderbook/start", m.handler.StartCollectorHandler).Methods("POST")
-	router.HandleFunc("/collect/orderbook/stop", m.handler.StopCollectorHandler).Methods("POST")
+	router.HandleFunc("/get_bot_info",            m.handler.GetBotInfoHandler)       .Methods("POST")
+	router.HandleFunc("/get_order_book",          m.handler.GetOrderBookHandler)     .Methods("POST")
+	router.HandleFunc("/get_candles_history",     m.handler.GetCandlesHistoryHandler).Methods("POST")
+	router.HandleFunc("/collect/orderbook/start", m.handler.StartCollectorHandler)   .Methods("POST")
+	router.HandleFunc("/collect/orderbook/stop",  m.handler.StopCollectorHandler)    .Methods("POST")
 
 	// for static
 	// http://localhost:9090/app/

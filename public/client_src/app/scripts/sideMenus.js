@@ -42,7 +42,7 @@ app.controller('SideMenusCtrl',
                 };
 
                 if(vm.botStatus.id == 1){ // want to start
-                    data.interval = 5;
+                    data.interval = 60;
                     data.type = 'start';
                 }
                 else if(vm.botStatus.id == 2){ // want to stop
