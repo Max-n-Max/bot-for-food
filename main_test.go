@@ -5,14 +5,16 @@ import (
 	"fmt"
 	"github.com/bitfinexcom/bitfinex-api-go/v2"
 	v2 "github.com/bitfinexcom/bitfinex-api-go/v2/rest"
-
 	"github.com/bitfinexcom/bitfinex-api-go/v2/websocket"
 	"log"
+	"reflect"
 	"testing"
 	"time"
 )
 
 /**
+https://docs.bitfinex.com/reference#ws-public-raw-books
+
 https://medium.com/bitfinex/tutorial-trading-cryptos-on-the-bitfinex-platform-using-golang-9b100ddcf72c
 */
 func TestListenOnChage(t *testing.T){
@@ -24,17 +26,63 @@ func TestListenOnChage(t *testing.T){
 		return
 	}
 
-	_, err = client.SubscribeTrades(context.Background(), bitfinex.TradingPrefix+bitfinex.ETHBTC)
+	_, err = client.SubscribeTrades(context.Background(),
+		bitfinex.TradingPrefix +
+		//bitfinex.ETHBTC
+		"ETPUSD")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	_, err = client.SubscribeBook(context.Background(),
+		bitfinex.TradingPrefix + "ETPUSD",
+		"P1",  // P0-3 | R0
+		"F0", // F1  print in RT or by junks
+		25)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	for obj := range client.Listen() {
+
 		switch obj.(type) {
+		case *bitfinex.BookUpdateSnapshot:
+			//log.Printf("BookUpdateSnapshot: %#v", obj)
+			break
+		case *bitfinex.BookUpdate:
+
+			//bookUpdate := obj.(*bitfinex.BookUpdate)
+			//side := "unknown"
+			//if bookUpdate.Side == 0x1{
+			//	side = "BUY "
+			//} else if bookUpdate.Side == 0x2{
+			//	side = "SELL"
+			//}
+			//log.Printf("BookUpdate: side=%s price= %#f; amount= %#f;", side, bookUpdate.Price, bookUpdate.Amount)
+			break
+		case *websocket.SubscribeEvent:
+			//log.Printf("SubscribeEvent: %#v", obj)
+			break
+		case *bitfinex.Trade:
+
+			trade := obj.(*bitfinex.Trade)
+			side := "unknown"
+			if trade.Side == 0x1{
+				side = "BUY "
+			} else if trade.Side == 0x2{
+				side = "SELL"
+			}
+			log.Printf("trade: side=%s price= %#f; amount= %#f;", side, trade.Price, trade.Amount)
+
+			break
+		case *bitfinex.TradeSnapshot:
+
+			break
 		case error:
 			log.Printf("EROR RECV: %s", obj)
 		default:
-			log.Printf("MSG RECV: %#v", obj)
+			log.Println(reflect.TypeOf(obj))
+			//log.Printf("MSG RECV: %#v", obj)
 		}
 	}
 }
