@@ -1,19 +1,27 @@
 package collector
 
 import (
+	"context"
 	"fmt"
 	"github.com/Max-n-Max/bot-for-food/config"
 	"github.com/Max-n-Max/bot-for-food/db"
 	"github.com/Max-n-Max/bot-for-food/exchange"
 	"github.com/Max-n-Max/bot-for-food/resources"
+	"github.com/bitfinexcom/bitfinex-api-go/v2/websocket"
 	"log"
-	"time"
 )
 
 type orderBookCollector struct {
 	in  chan string
 	out chan resources.OrderBook
-	t   *time.Ticker
+	c   *websocket.Client
+	id  string
+}
+
+func (o *orderBookCollector) unsubscribe() {
+	o.c.Unsubscribe(context.Background(), o.id)
+	close(o.in)
+	close(o.out)
 }
 
 type Manager struct {
@@ -39,33 +47,34 @@ func NewManager(manager exchange.Manager, db db.Manager, config config.Manager) 
 	return m
 }
 
-func (m *Manager) StartOrderBookCollection(pair string, interval int) {
-	log.Println("Start ", pair, "collecting")
-	pc := orderBookCollector{in: make(chan string), out: make(chan resources.OrderBook), t: time.NewTicker(time.Duration(interval) * time.Second)}
+func (m *Manager) StartOrderBookCollection(pair, precision, frequency string, priceLevel int) {
+	log.Println("Start", pair, "collecting")
+
+	// register listener with given params
+	pc := orderBookCollector{in: make(chan string), out: make(chan resources.OrderBook), c: websocket.New()}
 	m.pool[pair] = &pc
-	go runTicker(m.ExchangeManager.GetOrderBook, pair, *m.pool[pair].t, m.pool[pair].in)
+
+	id, err := startOrderBookListener(m.pool[pair].c,
+		m.ExchangeManager.GetOrderBook,
+		pair,
+		precision,
+		frequency,
+		priceLevel,
+		m.pool[pair].in)
+	if err != nil {
+		return
+	}
+
+	m.pool[pair].id = id
+
 	go ProcessOrderBook(m.pool[pair].in, m.pool[pair].out)
 	go saveResults(m.db, m.pool[pair].out, m.config.GetString("db.order-book-collection"))
 }
 
 func (m *Manager) StopCollection(pair string) {
-	log.Println("Stop ", pair, "collecting")
-	m.pool[pair].t.Stop()
-	close(m.pool[pair].in)
-	close(m.pool[pair].out)
+	log.Println("Stop", pair, "collecting")
+	m.pool[pair].unsubscribe()
 	delete(m.pool, pair)
-}
-
-func runTicker(fn queryType, pair string, ticker time.Ticker, channel chan string) {
-	for {
-		_ = <-ticker.C
-		res, e := fn(pair)
-		if e == nil {
-			channel <- res
-		} else {
-			fmt.Println("Cannot get data from exchange. Error: ", e)
-		}
-	}
 }
 
 func saveResults(db db.Manager, resCh chan resources.OrderBook, collection string) {

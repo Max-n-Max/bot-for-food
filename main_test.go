@@ -34,7 +34,8 @@ func TestListenOnChage(t *testing.T){
 		log.Fatal(err)
 	}
 
-	_, err = client.SubscribeBook(context.Background(),
+	_, err = client.
+		SubscribeBook(context.Background(),
 		bitfinex.TradingPrefix + "ETPUSD",
 		"P1",  // P0-3 | R0
 		"F0", // F1  print in RT or by junks
@@ -51,14 +52,14 @@ func TestListenOnChage(t *testing.T){
 			break
 		case *bitfinex.BookUpdate:
 
-			//bookUpdate := obj.(*bitfinex.BookUpdate)
-			//side := "unknown"
-			//if bookUpdate.Side == 0x1{
-			//	side = "BUY "
-			//} else if bookUpdate.Side == 0x2{
-			//	side = "SELL"
-			//}
-			//log.Printf("BookUpdate: side=%s price= %#f; amount= %#f;", side, bookUpdate.Price, bookUpdate.Amount)
+			bookUpdate := obj.(*bitfinex.BookUpdate)
+			side := "unknown"
+			if bookUpdate.Side == 0x1{
+				side = "BUY "
+			} else if bookUpdate.Side == 0x2{
+				side = "SELL"
+			}
+			log.Printf("BookUpdate: side=%s price= %#f; amount= %#f;", side, bookUpdate.Price, bookUpdate.Amount)
 			break
 		case *websocket.SubscribeEvent:
 			//log.Printf("SubscribeEvent: %#v", obj)

@@ -40,7 +40,7 @@ func (h *Handler) StartCollectorHandler(w http.ResponseWriter, r *http.Request) 
 		panic(err)
 	}
 
-	h.collector.StartOrderBookCollection(rBody.Pair, rBody.Interval)
+	h.collector.StartOrderBookCollection(rBody.Pair, rBody.Precision, rBody.Frequency, rBody.PriceLevel)
 }
 
 func (h *Handler) StopCollectorHandler(w http.ResponseWriter, r *http.Request) {
@@ -73,7 +73,7 @@ func (h *Handler) GetOrderBookHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Calculate walls and window and add it to result
-	enOB := enrichOrderBook(res, rBody.Wall, rBody.SumWall, rBody.Window, rBody.SkipbB)
+	enOB := enrichOrderBook(res, rBody.Wall, rBody.SumWall, rBody.Window, rBody.SkipB)
 	responseBody := enOB
 
 	if responseBody == "" || responseBody == "null"{

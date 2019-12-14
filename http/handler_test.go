@@ -14,7 +14,7 @@ import (
 func TestEnrich(t *testing.T) {
 	byteValue, _ := json.Marshal(createTestDataset())
 
-	res := enrichOrderBook(string(byteValue), 2000.0, 1000.0, 0.01)
+	res := enrichOrderBook(string(byteValue), 2000.0, 1000.0, 0.01, false)
 	assert.NotNil(t, res, "")
 }
 
